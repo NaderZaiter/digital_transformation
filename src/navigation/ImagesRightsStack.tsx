@@ -27,18 +27,6 @@ export function ImagesRightsStack() {
         }}
       />
 
-      <RootStackNav.Screen
-        name="AddBudgetScreen"
-        component={AddBudgetScreen}
-        options={{
-          title: "Nuevo presupuesto",
-          headerTintColor: colors.white,
-          headerStyle: {
-            backgroundColor: colors.primary,
-          },
-        }}
-      />
-
     </RootStackNav.Navigator>
   );
 }

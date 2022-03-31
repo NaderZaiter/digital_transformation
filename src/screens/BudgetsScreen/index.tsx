@@ -13,8 +13,12 @@ const BudgetsScreen = ({ navigation }) => {
     getReminders();
   }, []);
 
-  const navigateNewRequest = () => {
+  const navigateAddBudgetScreen= () => {
     navigation.navigate("AddBudgetScreen");
+  };
+
+  const navigateModifyBudgetScreen = () => {
+    navigation.navigate("ModifyBudgetScreen");
   };
 
   const pickerRef = useRef();
@@ -53,12 +57,12 @@ const BudgetsScreen = ({ navigation }) => {
         <Button title="Todos" color={colors.primary} onPress={() => { }} />
       </View>
       <View style={styles.registerBtnContainer}>
-        <TouchableOpacity onPress={() => { }}>
+        <TouchableOpacity onPress={navigateModifyBudgetScreen}>
           <Text style={styles.signinrBtn}>Modificar presupuesto</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.registerBtnContainer}>
-        <TouchableOpacity onPress={navigateNewRequest}>
+        <TouchableOpacity onPress={navigateAddBudgetScreen}>
           <Text style={styles.signinrBtn}>Agregar presupuesto</Text>
         </TouchableOpacity>
       </View>

@@ -3,12 +3,13 @@ import {
   Text,
   View,
   StyleSheet,
+  TextInput,
 } from "react-native";
 import React, { useRef } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 
-const AddBudgetComponent = ({ navigation }) => {
+const ModifyBudgetComponent = ({ navigation }) => {
   const user = useSelector((state) => state?.user);
 
   const pickerRef = useRef();
@@ -26,8 +27,9 @@ const AddBudgetComponent = ({ navigation }) => {
 
   return (
     <ScrollView>
-      <View style={styles.container}>
-        <Text>Introduce la información del presupuesto:</Text>
+      <View>
+        <Text>Busca el presupuesto que quieres modificar:</Text>
+        <TextInput style={styles.input} placeholder="Referencia presupuesto"></TextInput>
       </View>
     </ScrollView>
   );
@@ -68,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddBudgetComponent;
+export default ModifyBudgetComponent;
