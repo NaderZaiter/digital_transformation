@@ -1,11 +1,10 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { colors } from "../constants/palette";
-import EditProfileScreen from "../screens/ProfileScreen/EditProfileScreen";
-import ProfileScreen from "../screens/ProfileScreen/ProfileScreen";
 import AddBudgetScreen from "../screens/AddBudgetScreen";
+import ImagesRightsScreen from "../screens/ImagesRightsScreen";
 
-export function ProfileStack() {
+export function ImagesRightsStack() {
   const RootStackNav = createStackNavigator();
 
   return (
@@ -17,22 +16,10 @@ export function ProfileStack() {
       }}
     >
       <RootStackNav.Screen
-        name="ProfileScreen"
-        component={ProfileScreen}
+        name="ImagesRightsScreen"
+        component={ImagesRightsScreen}
         options={{
-          title: "Perfil",
-          headerTintColor: colors.white,
-          headerStyle: {
-            backgroundColor: colors.primary,
-          },
-        }}
-      />
-
-      <RootStackNav.Screen
-        name="EditProfileScreen"
-        component={EditProfileScreen}
-        options={{
-          title: "Edit profile",
+          title: "Derechos imágen",
           headerTintColor: colors.white,
           headerStyle: {
             backgroundColor: colors.primary,
@@ -51,6 +38,7 @@ export function ProfileStack() {
           },
         }}
       />
+
     </RootStackNav.Navigator>
   );
 }

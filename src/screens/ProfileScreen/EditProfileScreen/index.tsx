@@ -1,24 +1,21 @@
-import React, {useRef, useState} from "react";
-import {Text, View, StyleSheet, TextInput, ScrollView} from "react-native";
-import {useSelector} from "react-redux";
-import {colors} from "../../../constants/palette";
-import {Avatar, Switch} from "react-native-elements";
+import React, { useRef, useState } from "react";
+import { Text, View, StyleSheet, TextInput, ScrollView } from "react-native";
+import { useSelector } from "react-redux";
+import { colors } from "../../../constants/palette";
+import { Avatar, Switch } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
 import DatePicker from "react-native-datepicker";
-import {TouchableOpacity} from "react-native-gesture-handler";
-import {Picker} from "@react-native-picker/picker";
-import {store} from "../../../redux/store";
-import {updateUserProfile} from "../../../redux/slices/userSlice";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { store } from "../../../redux/store";
+import { updateUserProfile } from "../../../redux/slices/userSlice";
 import Toast from "react-native-toast-message";
 
-const EditProfileScreen = ({navigation}) => {
+const EditProfileScreen = ({ navigation }) => {
   const user = useSelector((state) => state?.user);
   const [firstName, setFirstName] = useState(user.userProfile.firstName);
   const [lastName, setLastName] = useState(user.userProfile.lastName);
   const [dateOfBirth, setDdateOfBirth] = useState(null);
-  const [image, setImage] = useState(
-    user.userProfile.profile_picture_url
-  );
+  const [image, setImage] = useState(user.userProfile.profile_picture_url);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -34,23 +31,23 @@ const EditProfileScreen = ({navigation}) => {
   };
 
   const Submit = () => {
-    if(!firstName){
+    if (!firstName) {
       Toast.show({
         type: 'error',
         text1: 'El nombre es obligatorio.',
       });
-    }else if(!lastName){
+    } else if (!lastName) {
       Toast.show({
         type: 'error',
         text1: 'Los apellidos son obligatorios.',
       });
     }
-    else if(!dateOfBirth){
+    else if (!dateOfBirth) {
       Toast.show({
         type: 'error',
         text1: 'La fecha de nacimiento es obligatoria.',
       });
-    }else {
+    } else {
       store.dispatch(
         updateUserProfile({
           userProfile: {
@@ -74,16 +71,17 @@ const EditProfileScreen = ({navigation}) => {
   function close() {
     pickerRef.current.blur();
   }
+
   return (
     <ScrollView>
       <View>
-      <Toast/>
+        <Toast />
         <View style={styles.headContainer}>
           <View style={styles.avatar}>
             <Avatar
               activeOpacity={0.2}
               avatarStyle={{}}
-              containerStyle={{backgroundColor: colors.text}}
+              containerStyle={{ backgroundColor: colors.text }}
               iconStyle={{}}
               imageProps={{}}
               onLongPress={pickImage}
@@ -92,7 +90,7 @@ const EditProfileScreen = ({navigation}) => {
               placeholderStyle={{}}
               rounded
               size="large"
-              source={{uri: image}}
+              source={{ uri: image }}
               titleStyle={{}}
             />
           </View>

@@ -1,33 +1,20 @@
-import React, {useEffect, useState} from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
-import {useSelector} from "react-redux";
-import {colors} from "../../../constants/palette";
-import {Avatar, Switch} from "react-native-elements";
+import React, { useEffect, useState } from "react";
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { useSelector } from "react-redux";
+import { colors } from "../../../constants/palette";
+import { Avatar, Switch } from "react-native-elements";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import ProfileButtonComponent from "../../../components/ProfileButtonComponent";
-import {store} from "../../../redux/store";
-import {deleteUser} from "../../../redux/slices/userSlice";
+import { store } from "../../../redux/store";
+import { deleteUser } from "../../../redux/slices/userSlice";
 
-const ProfileScreen = ({navigation}) => {
+const ProfileScreen = ({ navigation }) => {
   const user = useSelector((state) => state?.user);
-
-  const NavigateHealthRecord = (id) => {
-    navigation.navigate("HealthRecordScreen", {user_id: id});
-  };
-
-  const navigateMyDonations = () => {
-    navigation.navigate("MyDonationsScreen");
-  };
 
   const navigateEditProfile = () => {
     navigation.navigate("EditProfileScreen");
   };
+
   const [id, setId] = useState(null);
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
@@ -36,20 +23,24 @@ const ProfileScreen = ({navigation}) => {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    setId(user.userProfile.id);
-    if(user.userProfile.firstName){
+    if (user.userProfile.id) {
+      setId(user.userProfile.id);
+    } else {
+      setId(0)
+    }
+    if (user.userProfile.firstName) {
       setFirstName(user.userProfile.firstName);
-    }else{
+    } else {
       setFirstName('Nader Mohammad');
     }
-    if(user.userProfile.lastName){
+    if (user.userProfile.lastName) {
       setLastName(user.userProfile.lastName);
-    }else{
+    } else {
       setLastName('Zaiter');
     }
-    if(user.userProfile.profile_picture_url.length > 0){
+    if (user.userProfile.profile_picture_url.length > 0) {
       setImage(user.userProfile.profile_picture_url);
-    }else{
+    } else {
       setImage('../../../assets/default_photo.jpg')
     }
     setValue(true);
@@ -60,7 +51,7 @@ const ProfileScreen = ({navigation}) => {
     setValue(!value);
     if (!value) {
       setStatus("Available");
-    }else{
+    } else {
       setStatus("Unavailable");
     }
   };
@@ -76,11 +67,11 @@ const ProfileScreen = ({navigation}) => {
           <View style={styles.avatar}>
             <Avatar
               activeOpacity={0.2}
-              containerStyle={{backgroundColor: colors.text}}
+              containerStyle={{ backgroundColor: colors.text }}
               rounded
               size="large"
               source={
-                {uri: image}
+                { uri: image }
               }
             />
           </View>

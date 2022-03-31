@@ -1,13 +1,10 @@
-import React, {useState} from "react";
-import {
-  TextInput,
-  TouchableOpacity,
-} from "react-native-gesture-handler";
-import {Text, View, StyleSheet, Button} from "react-native";
-import {store} from "../../redux/store";
-import {updateUserProfile} from "../../redux/slices/userSlice";
-import {useNavigation} from "@react-navigation/core";
-import {colors} from "../../constants/palette";
+import React, { useState } from "react";
+import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { Text, View, StyleSheet, Button } from "react-native";
+import { store } from "../../redux/store";
+import { updateUserProfile } from "../../redux/slices/userSlice";
+import { useNavigation } from "@react-navigation/core";
+import { colors } from "../../constants/palette";
 import Toast from 'react-native-toast-message';
 
 const LoginScreen: React.FC = () => {
@@ -16,22 +13,22 @@ const LoginScreen: React.FC = () => {
   const [password, setPassword] = useState(null);
 
   const login = () => {
-    if(!user && !password){
+    if (!user && !password) {
       Toast.show({
         type: 'error',
         text1: 'El usuario y la contraseña son obligatorios.',
       });
-    }else if(!user){
+    } else if (!user) {
       Toast.show({
         type: 'error',
         text1: 'El usuario es obligatorios.',
       });
-    }else if(!password){
+    } else if (!password) {
       Toast.show({
         type: 'error',
         text1: 'La contraseña es obligatoria.',
       });
-    }else if(user === 'nader' && password === '123'){
+    } else if (user === 'nader' && password === '123') {
       Toast.show({
         type: 'success',
         text1: 'Bienvenido.',
@@ -50,7 +47,7 @@ const LoginScreen: React.FC = () => {
           },
         })
       );
-    }else{
+    } else {
       Toast.show({
         type: 'error',
         text1: 'Usuario sin permisos.',
@@ -60,11 +57,10 @@ const LoginScreen: React.FC = () => {
   const navigateRegister = () => {
     navigation.navigate("RegisterScreen");
   };
-  
 
   return (
     <View>
-      <Toast/>
+      <Toast />
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Sign in</Text>
       </View>
@@ -95,14 +91,14 @@ const LoginScreen: React.FC = () => {
             <Button title="Login" color={colors.black} onPress={login} />
           </View>
           <View style={styles.registerBtnContainer}>
-              <Text>Todavía no tienes usuario?</Text>
-              <TouchableOpacity onPress={navigateRegister}>
-                <Text style={styles.signinrBtn}>Regístrate</Text>
-              </TouchableOpacity>
-            </View>
+            <Text>Todavía no tienes usuario?</Text>
+            <TouchableOpacity onPress={navigateRegister}>
+              <Text style={styles.signinrBtn}>Regístrate</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-      <Toast/>
+      <Toast />
     </View>
   );
 };

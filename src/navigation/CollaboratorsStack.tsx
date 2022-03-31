@@ -1,12 +1,10 @@
-import React, {useRef} from "react";
-import {createStackNavigator} from "@react-navigation/stack";
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { colors } from "../constants/palette";
+import collaboratorsScreen from "../screens/collaboratorsScreen";
 
-import {colors} from "../constants/palette";
-import MapScreen from "../screens/MapScreen";
-
-export function MapStack() {
+export function CollaboratorsStack() {
   const RootStackNav = createStackNavigator();
-  const navigationRef = useRef(null);
 
   return (
     <RootStackNav.Navigator
@@ -17,8 +15,8 @@ export function MapStack() {
       }}
     >
       <RootStackNav.Screen
-        name="MapScreen"
-        component={MapScreen}
+        name="collaboratorsScreen"
+        component={collaboratorsScreen}
         options={{
           title: "Colaboradores",
           headerTintColor: colors.white,

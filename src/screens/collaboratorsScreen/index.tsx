@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, TextInput, Button } from "react-native";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import { colors } from "../../constants/palette";
 
 
-const MapScreen = ({navigation}) => {
+const collaboratorsScreen = ({ navigation }) => {
   const user = useSelector((state) => state?.user);
   const [requests, setRequests] = useState();
 
-  const navigateNewRequest = () => {
-    navigation.navigate("NewRequestScreen");
-  };
-
-  const navigateRequestView = (id) => {
-    navigation.navigate("RequestViewScreen", {id: id});
-  };
-  
   const getRequests = () => {
-    
+
   };
 
   useEffect(() => {
@@ -36,9 +28,9 @@ const MapScreen = ({navigation}) => {
       </View>
       <View>
         <Text>Consultar los colaboradores por categoría:</Text>
-          <Button title="Fotógrafos" color={colors.primary} onPress={()=>{}} />
-          <Button title="Modelistas" color={colors.primary} onPress={()=>{}} />
-          <Button title="Todos" color={colors.primary} onPress={()=>{}} />
+        <Button title="Fotógrafos" color={colors.primary} onPress={() => { }} />
+        <Button title="Modelistas" color={colors.primary} onPress={() => { }} />
+        <Button title="Todos" color={colors.primary} onPress={() => { }} />
       </View>
     </View>
   );
@@ -52,4 +44,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default MapScreen;
+export default collaboratorsScreen;

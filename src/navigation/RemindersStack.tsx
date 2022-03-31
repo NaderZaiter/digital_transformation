@@ -1,11 +1,10 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { colors } from "../constants/palette";
-import EditProfileScreen from "../screens/ProfileScreen/EditProfileScreen";
-import ProfileScreen from "../screens/ProfileScreen/ProfileScreen";
+import RemindersScreen from "../screens/RemindersScreen";
 import AddBudgetScreen from "../screens/AddBudgetScreen";
 
-export function ProfileStack() {
+export function RemindersStack() {
   const RootStackNav = createStackNavigator();
 
   return (
@@ -17,22 +16,10 @@ export function ProfileStack() {
       }}
     >
       <RootStackNav.Screen
-        name="ProfileScreen"
-        component={ProfileScreen}
+        name="RemindersScreen"
+        component={RemindersScreen}
         options={{
-          title: "Perfil",
-          headerTintColor: colors.white,
-          headerStyle: {
-            backgroundColor: colors.primary,
-          },
-        }}
-      />
-
-      <RootStackNav.Screen
-        name="EditProfileScreen"
-        component={EditProfileScreen}
-        options={{
-          title: "Edit profile",
+          title: "Recordatorios",
           headerTintColor: colors.white,
           headerStyle: {
             backgroundColor: colors.primary,

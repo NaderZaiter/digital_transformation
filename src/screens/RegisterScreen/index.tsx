@@ -1,15 +1,8 @@
-import React, {useRef, useState} from "react";
-import {
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-} from "react-native-gesture-handler";
-import {Text, View, StyleSheet, Button, Platform } from "react-native";
-import {useNavigation} from "@react-navigation/core";
-import {colors} from "../../constants/palette";
-import {Picker} from "@react-native-picker/picker";
-import * as Notifications from 'expo-notifications';
-import Constants from 'expo-constants';
+import React, { useRef, useState } from "react";
+import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { Text, View, StyleSheet, Button } from "react-native";
+import { useNavigation } from "@react-navigation/core";
+import { colors } from "../../constants/palette";
 import Toast from "react-native-toast-message";
 
 const LoginScreen: React.FC = () => {
@@ -19,42 +12,8 @@ const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
-  const [city, setCity] = useState('1');
-  const [FirebaseToken, setFirebaseToken] = useState(null);
-
-  async function registerForPushNotificationsAsync() {
-    let token;
-    if (Constants.isDevice) {
-      const { status: existingStatus } =
-        await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== "granted") {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== "granted") {
-        alert("Failed to get push token for push notification!");
-        return;
-      }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-    } else {
-      alert("Must use physical device for Push Notifications");
-    }
-    if (Platform.OS === "android") {
-      Notifications.setNotificationChannelAsync("default", {
-        name: "default",
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: "#FF231F7C",
-      });
-    }
-    setFirebaseToken(token);
-    return token;
-  }
 
   const register = async () => {
-    //await registerForPushNotificationsAsync()
-
     if (!firstName) {
       Toast.show({
         type: 'error',
@@ -80,7 +39,7 @@ const LoginScreen: React.FC = () => {
         type: 'error',
         text1: 'La contraseña es obligatoria.',
       });
-    }else if(!confirmPassword) {
+    } else if (!confirmPassword) {
       Toast.show({
         type: 'error',
         text1: 'La confirmación de la contraseña es obligatoria.',
@@ -119,7 +78,7 @@ const LoginScreen: React.FC = () => {
   return (
     <ScrollView>
       <View>
-      <Toast/>
+        <Toast />
         <View style={styles.headerContainer}>
           <Text style={styles.header}>Welcome aboard!</Text>
         </View>

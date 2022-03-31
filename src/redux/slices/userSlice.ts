@@ -10,13 +10,11 @@ export interface User {
         dateOfBirth: string;
         profileImage?: string;
         gender?: string;
-        city_id?: string;
         profile_picture_url?: string;
         is_available?: number;
         token?: string;
         long?: string;
         lat?: string;
-        bloodType?: string;
     }
 }
 

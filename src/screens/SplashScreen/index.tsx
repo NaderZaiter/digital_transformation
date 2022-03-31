@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, Button, StyleSheet } from "react-native";
-import {colors} from "../../constants/palette";
-import {useNavigation} from "@react-navigation/core";
+import { colors } from "../../constants/palette";
+import { useNavigation } from "@react-navigation/core";
 import { Image } from 'react-native';
 
 const SplashScreen: () => JSX.Element = () => {
@@ -13,7 +13,7 @@ const SplashScreen: () => JSX.Element = () => {
     navigation.navigate("RegisterScreen");
   };
   return (
-    <View style={styles.container}> 
+    <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Image style={styles.image} source={require('../../../assets/logo.jpg')} />
         <Text style={styles.upperHeader}>Bienvenido a</Text>
@@ -21,7 +21,7 @@ const SplashScreen: () => JSX.Element = () => {
       </View>
       <View style={styles.bodyContainer}>
         <View>
-          <Button title="Login"  color={colors.primary} onPress={navigateLogin} />
+          <Button title="Login" color={colors.primary} onPress={navigateLogin} />
         </View>
         <View style={styles.registerBtn}>
           <Button title="Register" color={colors.black} onPress={navigateRegister} />
@@ -33,7 +33,7 @@ const SplashScreen: () => JSX.Element = () => {
 
 const styles = StyleSheet.create({
   container: {},
-  image:{
+  image: {
     width: 180,
     height: 180,
     borderRadius: 30,
@@ -49,10 +49,6 @@ const styles = StyleSheet.create({
   },
   lowerHeader: {
     fontSize: 36,
-  },
-  subHeader: {
-    fontSize: 18,
-    marginVertical: '5%'
   },
   bodyContainer: {
     margin: 20,

@@ -25,57 +25,57 @@ const FullWidthButton: FC<FullWidthButtonProps> = (props) => {
 
     return (
         <View style={props.style}>
-                <TouchableOpacity
-                    disabled={!props.enabled || props.loading}
-                    onPress={props.callback}
-                    testID="full-width-button"
-                    containerStyle={[
-                        styles.fullWidthButton,
-                        props.reverse && styles.reversedButton,
-                        !props.enabled && styles.disabledButton,
-                        props.loading && styles.disabledButton,
-                        props.buttonStyle,
-                    ]}>
-                    {props.loading && (
-                        <ActivityIndicator
-                            color={
-                                props.reverse
-                                    ? styles.indicatorReversed.color
-                                    : styles.indicator.color
-                            }
-                            size="small"
-                        />
-                    )}
-                    {!!props.title && (
-                        <Text
-                            numberOfLines={1}
-                            style={[
-                                styles.fullWidthButtonText,
-                                props.reverse && styles.reversedButtonText,
-                                props.textStyle,
-                                {
-                                    marginLeft: props.loading ? 10 : 0,
-                                },
-                            ]}
-                        >
-                            {label}
-                        </Text>
-                    )}
-                    {!!props.icon && (
-                        <Icon
-                            name={props.icon}
-                            color={props.reverse ? colors.black : colors.white}
-                            size={24}
-                            style={{}}
-                        />
-                    )}
-                </TouchableOpacity>
+            <TouchableOpacity
+                disabled={!props.enabled || props.loading}
+                onPress={props.callback}
+                testID="full-width-button"
+                containerStyle={[
+                    styles.fullWidthButton,
+                    props.reverse && styles.reversedButton,
+                    !props.enabled && styles.disabledButton,
+                    props.loading && styles.disabledButton,
+                    props.buttonStyle,
+                ]}>
+                {props.loading && (
+                    <ActivityIndicator
+                        color={
+                            props.reverse
+                                ? styles.indicatorReversed.color
+                                : styles.indicator.color
+                        }
+                        size="small"
+                    />
+                )}
+                {!!props.title && (
+                    <Text
+                        numberOfLines={1}
+                        style={[
+                            styles.fullWidthButtonText,
+                            props.reverse && styles.reversedButtonText,
+                            props.textStyle,
+                            {
+                                marginLeft: props.loading ? 10 : 0,
+                            },
+                        ]}
+                    >
+                        {label}
+                    </Text>
+                )}
+                {!!props.icon && (
+                    <Icon
+                        name={props.icon}
+                        color={props.reverse ? colors.black : colors.white}
+                        size={24}
+                        style={{}}
+                    />
+                )}
+            </TouchableOpacity>
         </View>
     );
 };
 
 FullWidthButton.defaultProps = {
-    callback: () => {},
+    callback: () => { },
     loading: false,
     preserveCase: false,
 };

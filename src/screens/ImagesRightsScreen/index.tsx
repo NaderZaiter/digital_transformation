@@ -1,14 +1,8 @@
-import React, {useEffect, useState} from "react";
-import {FlatList, Text, View, ScrollView, StyleSheet, RefreshControl, Button, TextInput} from "react-native";
-import {useSelector} from "react-redux";
-import {colors} from "../../../../constants/palette";
-import InProgressRequestComponent from "../../../../components/InProgressRequestComponent";
-import NewRequestBottunComponent from "../../../../components/NewRequestBottunComponent";
-import EmptyState from "../../../../components/EmptyState";
-import {TouchableOpacity} from "react-native-gesture-handler";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
-const InProgressScreen = ({navigation, route}) => {
+import React, { useEffect, useState } from "react";
+import { Text, View, StyleSheet, Button, TextInput } from "react-native";
+import { useSelector } from "react-redux";
+import { colors } from "../../constants/palette";
+const ImagesRightsScreen = ({ navigation, route }) => {
   const user = useSelector((state) => state?.user);
   const [imagesRights, setImagesRights] = useState('');
   const [refreshing, setRefreshing] = useState(false);
@@ -27,10 +21,10 @@ const InProgressScreen = ({navigation, route}) => {
     navigation.navigate("FulfilledScreen");
   };
   const navigateRequests = (id) => {
-    navigation.navigate("RequestsScreen", {id: id});
+    navigation.navigate("RequestsScreen", { id: id });
   };
   const navigateNewRequest = () => {
-    navigation.navigate("NewRequestScreen");
+    navigation.navigate("AddBudgetScreen");
   };
 
   const onRefresh = () => {
@@ -51,11 +45,11 @@ const InProgressScreen = ({navigation, route}) => {
       </View>
       <View>
         <Text>Consultar los derechos imagen por categoría:</Text>
-          <Button title="En curso" color={colors.primary} onPress={()=>{}} />
-          <Button title="Caducados" color={colors.primary} onPress={()=>{}} />
-          <Button title="Todos" color={colors.primary} onPress={()=>{}} />
+        <Button title="En curso" color={colors.primary} onPress={() => { }} />
+        <Button title="Caducados" color={colors.primary} onPress={() => { }} />
+        <Button title="Todos" color={colors.primary} onPress={() => { }} />
       </View>
-  </View>
+    </View>
   )
 };
 
@@ -66,4 +60,4 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   }
 });
-export default InProgressScreen;
+export default ImagesRightsScreen;

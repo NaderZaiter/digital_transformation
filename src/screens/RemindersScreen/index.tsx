@@ -1,21 +1,18 @@
-import React, {useEffect, useState} from "react";
-import {View, Text} from "react-native";
-import {useSelector} from "react-redux";
-import {ScrollView} from "react-native-gesture-handler";
+import React, { useEffect, useState } from "react";
+import { View, Text } from "react-native";
+import { useSelector } from "react-redux";
+import { ScrollView } from "react-native-gesture-handler";
 
-const NotificationsScreen = ({navigation}) => {
+const RemindersScreen = ({ navigation }) => {
   const [notifications, setNotifications] = useState();
   const user = useSelector((state) => state?.user);
 
-  const getNotifications = () => {
-    
-  };
   useEffect(() => {
     getNotifications();
   }, []);
 
-  const navigateRequestView = (blood_request_id) => {
-    navigation.navigate("RequestViewScreen", {id: blood_request_id});
+  const getNotifications = () => {
+
   };
 
   const [refreshing, setRefreshing] = useState(false);
@@ -24,7 +21,7 @@ const NotificationsScreen = ({navigation}) => {
     getNotifications();
     setRefreshing(false);
   };
-  
+
   return (
     <View>
       <ScrollView>
@@ -34,4 +31,4 @@ const NotificationsScreen = ({navigation}) => {
   )
 };
 
-export default NotificationsScreen;
+export default RemindersScreen;
