@@ -11,6 +11,7 @@ import {
 import React, { useRef, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
+import _ from "lodash";
 
 const AddBudgetComponent = ({ navigation }) => {
   const user = useSelector((state) => state?.user);
@@ -28,6 +29,13 @@ const AddBudgetComponent = ({ navigation }) => {
   const Submit = () => {
 
   };
+
+  const getNotes = () => {
+    _.map(notes, (note, index) => {
+      return (<Text key={index}>{note.value}</Text>)
+    })
+  }
+
 
   return (
     <SafeAreaView style={styles.scrollContainer}>
@@ -93,6 +101,7 @@ const AddBudgetComponent = ({ navigation }) => {
           <TextInput style={styles.input} placeholder="IBAN"></TextInput>
           <Text>Fecha vencimiento:</Text>
           <TextInput style={styles.input} placeholder="dd/mm/yyyy"></TextInput>
+          {getNotes}
       </View>
     </ScrollView>
     </SafeAreaView>
@@ -105,7 +114,7 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight,
   },
   scrollView: {
-    paddingVertical: 20
+    paddingHorizontal: 20
   },
   container: {
     marginTop: 20,
