@@ -41,30 +41,37 @@ const AddBudgetComponent = ({ navigation }) => {
     <SafeAreaView style={styles.scrollContainer}>
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
-        <Text>Acerca del presupuesto:</Text>
+        <View style={styles.container}>
+          <Text>Acerca del presupuesto:</Text>
           <Text>Fecha:</Text>
           <TextInput style={styles.input} placeholder="dd/mm/yyyy"></TextInput>
           <Text>Número:</Text>
           <TextInput style={styles.input} placeholder="Número presupuesto"></TextInput>
           <Text>Referencia:</Text>
           <TextInput style={styles.input} placeholder="Referencia presupuesto"></TextInput>
-        <Text>Acerca del cliente:</Text>
-          <Text>Nombre:</Text>
-          <TextInput style={styles.input} placeholder="Nombre cliente"></TextInput>
-          <Text>C.I.F:</Text>
-          <TextInput style={styles.input} placeholder="CIF cliente"></TextInput>
-          <Text>Dirección:</Text>
-            <Text>Calle:</Text>
-            <TextInput style={styles.input} placeholder="Calle:"></TextInput>
-            <Text>Número:</Text>
-            <TextInput style={styles.input} placeholder="Número:"></TextInput>
-            <Text>Código postal:</Text>
-            <TextInput style={styles.input} placeholder="CP:"></TextInput>
-            <Text>Población:</Text>
-            <TextInput style={styles.input} placeholder="Población:"></TextInput>
-            <Text>Provincia:</Text>
-            <TextInput style={styles.input} placeholder="Provincia:"></TextInput>
-        <Text>Acerca de la tareas:</Text>
+        </View>
+        <View style={styles.container}>
+          <Text>Acerca del cliente:</Text>
+            <Text>Nombre:</Text>
+            <TextInput style={styles.input} placeholder="Nombre cliente"></TextInput>
+            <Text>C.I.F:</Text>
+            <TextInput style={styles.input} placeholder="CIF cliente"></TextInput>
+            <View style={styles.container}>
+              <Text>Dirección:</Text>
+              <Text>Calle:</Text>
+              <TextInput style={styles.input} placeholder="Calle:"></TextInput>
+              <Text>Número:</Text>
+              <TextInput style={styles.input} placeholder="Número:"></TextInput>
+              <Text>Código postal:</Text>
+              <TextInput style={styles.input} placeholder="CP:"></TextInput>
+              <Text>Población:</Text>
+              <TextInput style={styles.input} placeholder="Población:"></TextInput>
+              <Text>Provincia:</Text>
+              <TextInput style={styles.input} placeholder="Provincia:"></TextInput>
+            </View>
+        </View>
+        <View style={styles.container}>
+          <Text>Acerca de la tareas:</Text>
           <Text>Descripción:</Text>
           <TextInput style={styles.input} placeholder="Descripción"></TextInput>
           <Text>Categoría:</Text>
@@ -87,21 +94,26 @@ const AddBudgetComponent = ({ navigation }) => {
           <TextInput style={styles.input} placeholder="Forma de pago"></TextInput>
           <Text>Fecha de pago:</Text>
           <TextInput style={styles.input} placeholder="Fecha de pago"></TextInput>
+        </View>
+        <View style={styles.container}>
           <Text>Total presupuesto:</Text>
-            <Text>Total costes:</Text>
-            <TextInput style={styles.input} placeholder="0"></TextInput>
-            <Text>Producción fotográfica:</Text>
-            <TextInput style={styles.input} placeholder="0"></TextInput>
-            <Text>Fee agencia/producción:</Text>
-            <TextInput style={styles.input} placeholder="0"></TextInput>
-            <Text>Total presupuesto:</Text>
-            <TextInput style={styles.input} placeholder="0"></TextInput>
-        <Text>Notas:</Text>
+          <Text>Total costes:</Text>
+          <TextInput style={styles.input} placeholder="0"></TextInput>
+          <Text>Producción fotográfica:</Text>
+          <TextInput style={styles.input} placeholder="0"></TextInput>
+          <Text>Fee agencia/producción:</Text>
+          <TextInput style={styles.input} placeholder="0"></TextInput>
+          <Text>Total presupuesto:</Text>
+          <TextInput style={styles.input} placeholder="0"></TextInput>
+        </View>
+        <View style={styles.container}>
+          <Text>Notas:</Text>
           <Text>IBAN:</Text>
           <TextInput style={styles.input} placeholder="IBAN"></TextInput>
           <Text>Fecha vencimiento:</Text>
           <TextInput style={styles.input} placeholder="dd/mm/yyyy"></TextInput>
           {getNotes}
+        </View>
       </View>
     </ScrollView>
     </SafeAreaView>

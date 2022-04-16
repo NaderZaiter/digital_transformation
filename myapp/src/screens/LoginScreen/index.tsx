@@ -12,6 +12,47 @@ const LoginScreen: React.FC = () => {
   const [user, setUser] = useState(null);
   const [password, setPassword] = useState(null);
 
+  const existUserWithPermissions = (user, password) => {
+    let result = false;
+    // if(user === 'nader' && password === '123'){
+    //   result = true;
+    // }
+    fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }),
+      body: JSON.stringify({
+        email: user,
+        password: password,
+      }),
+    })
+      .then((response) => {response.json(); console.log("response: " + response.json())})
+      .then((responseJson) => {
+        // if(responseJson.status) {
+        //   store.dispatch(
+        //     updateUserProfile({
+        //       userProfile: {
+        //         id: responseJson.user.id,
+        //         firstName: responseJson.user.first_name,
+        //         lastName: responseJson.user.last_name,
+        //         email: responseJson.user.email,
+        //         profile_picture_url: responseJson.user.profile_picture_url,
+        //         is_available: responseJson.user.is_available,
+        //         token: responseJson.user.token,
+        //       },
+        //     })
+        //   );
+        // }
+        console.log(responseJson)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    return result;
+  }
+
   const login = () => {
     if (!user && !password) {
       Toast.show({
@@ -28,7 +69,7 @@ const LoginScreen: React.FC = () => {
         type: 'error',
         text1: 'La contraseña es obligatoria.',
       });
-    } else if (user === 'nader' && password === '123') {
+    } else if (existUserWithPermissions(user, password)) {
       Toast.show({
         type: 'success',
         text1: 'Bienvenido.',

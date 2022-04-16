@@ -13,8 +13,6 @@ export interface User {
         profile_picture_url?: string;
         is_available?: number;
         token?: string;
-        long?: string;
-        lat?: string;
     }
 }
 

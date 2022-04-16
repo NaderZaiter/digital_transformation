@@ -1,38 +1,17 @@
-import {Router} from 'express';
-import {getBudgets} from '../controllers/tasks'
+import {test} from '../controllers/tasks';
 
-const router = Router();
+const checkAuthMiddleware = require("../middleware/check-auth");
+const express = require("express");
+const router = express.Router();
 
 /**
  * @swagger
- * /register
- *  put:
- *  summary: Add user data to DDBB
+ * /test
+ *  get:
+ *  summary: Search user en DDBB
  */
-router.put('/register');
 
-router.put('/addBudget');
 
-router.post('/login');
 
-router.post('/modifyBudget/:id')
-
-router.get('/budget/:id');
-
-router.get('/budgetClients/:cif');
-
-router.get('/budgetCategory/:category', getBudgets);
-
-router.get('/imagesRightsBudget/:id');
-
-router.get('/imagesRightsClient/:cif');
-
-router.get('/imagesRightsCategory/:category');
-
-router.get('/getCollaborator/:id');
-
-router.get('/getCollaboratorBudget/:id');
-
-router.get('/getCollaboratorCategory/:category');
-
+router.get('/test', checkAuthMiddleware.checkAuth, test);
 export default router;

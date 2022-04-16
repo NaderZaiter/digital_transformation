@@ -1,2 +1,2 @@
 @host = http://localhost:3000/
-Get {{host}}budgetCategory/terminados 
+Get {{host}}test 
