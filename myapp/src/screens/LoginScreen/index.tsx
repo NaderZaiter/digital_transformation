@@ -6,46 +6,32 @@ import { updateUserProfile } from "../../redux/slices/userSlice";
 import { useNavigation } from "@react-navigation/core";
 import { colors } from "../../constants/palette";
 import Toast from 'react-native-toast-message';
+import { petitions } from "../../constants/petitions";
 
 const LoginScreen: React.FC = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState(null);
   const [password, setPassword] = useState(null);
 
-  const existUserWithPermissions = (user, password) => {
+  const existUserWithPermissions = async (user, password) => {
     let result = false;
-    // if(user === 'nader' && password === '123'){
-    //   result = true;
-    // }
-    fetch("http://localhost:3000/login", {
+    await fetch(petitions.login_local, {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
         Accept: "application/json",
       }),
       body: JSON.stringify({
-        email: user,
+        user: user,
         password: password,
       }),
     })
-      .then((response) => {response.json(); console.log("response: " + response.json())})
+      .then((response) => response.json())
       .then((responseJson) => {
-        // if(responseJson.status) {
-        //   store.dispatch(
-        //     updateUserProfile({
-        //       userProfile: {
-        //         id: responseJson.user.id,
-        //         firstName: responseJson.user.first_name,
-        //         lastName: responseJson.user.last_name,
-        //         email: responseJson.user.email,
-        //         profile_picture_url: responseJson.user.profile_picture_url,
-        //         is_available: responseJson.user.is_available,
-        //         token: responseJson.user.token,
-        //       },
-        //     })
-        //   );
-        // }
-        console.log(responseJson)
+        if(responseJson.code === 200) {
+          result = true;
+          saveUserData(responseJson.user)
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -53,7 +39,7 @@ const LoginScreen: React.FC = () => {
     return result;
   }
 
-  const login = () => {
+  const login = async() => {
     if (!user && !password) {
       Toast.show({
         type: 'error',
@@ -69,25 +55,11 @@ const LoginScreen: React.FC = () => {
         type: 'error',
         text1: 'La contraseña es obligatoria.',
       });
-    } else if (existUserWithPermissions(user, password)) {
+    } else if (await existUserWithPermissions(user, password)) {
       Toast.show({
         type: 'success',
         text1: 'Bienvenido.',
       });
-      store.dispatch(
-        updateUserProfile({
-          userProfile: {
-            id: '',
-            firstName: '',
-            lastName: '',
-            email: '',
-            profile_picture_url: '',
-            is_available: '',
-            token: '',
-            lat: '',
-          },
-        })
-      );
     } else {
       Toast.show({
         type: 'error',
@@ -95,6 +67,23 @@ const LoginScreen: React.FC = () => {
       });
     }
   };
+
+  const saveUserData = (user) => {
+    store.dispatch(
+      updateUserProfile({
+        userProfile: {
+          id: user.id,
+          firstName: user.name,
+          lastName: user.surname,
+          email: user.email,
+          profile_picture_url: user.profile_picture_url,
+          is_available: true,
+          token: ''
+        },
+      })
+    );
+  };
+
   const navigateRegister = () => {
     navigation.navigate("RegisterScreen");
   };
