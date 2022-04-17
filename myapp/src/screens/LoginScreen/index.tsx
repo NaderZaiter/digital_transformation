@@ -28,7 +28,7 @@ const LoginScreen: React.FC = () => {
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        if(responseJson.code === 200) {
+        if(responseJson.code === 200 && responseJson.user.permission) {
           result = true;
           saveUserData(responseJson.user)
         }

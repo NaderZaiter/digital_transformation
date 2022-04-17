@@ -24,10 +24,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      email: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
       permission: {
         allowNull: false,
         type: Sequelize.BOOLEAN

@@ -4,12 +4,13 @@ import { Text, View, StyleSheet, Button } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import { colors } from "../../constants/palette";
 import Toast from "react-native-toast-message";
+import { petitions } from "../../constants/petitions";
 
 const LoginScreen: React.FC = () => {
   const navigation = useNavigation();
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
-  const [email, setEmail] = useState(null);
+  const [user, setUser] = useState(null);
   const [password, setPassword] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
 
@@ -24,15 +25,10 @@ const LoginScreen: React.FC = () => {
         type: 'error',
         text1: 'Los apellidos son obligatorios.',
       });
-    } else if (!email) {
+    } else if (!user) {
       Toast.show({
         type: 'error',
-        text1: 'El correo electrónico es obligatorio.',
-      });
-    } else if (!validateEmail(email)) {
-      Toast.show({
-        type: 'error',
-        text1: 'El correo electrónico no es válido.',
+        text1: 'El usuario es obligatorio.',
       });
     } else if (!password) {
       Toast.show({
@@ -49,21 +45,59 @@ const LoginScreen: React.FC = () => {
         type: 'error',
         text1: 'Las contraseñas no coinciden.',
       });
-    } else {
+    } else if(await addUserToDDBB()){
       Toast.show({
         type: 'success',
         text1: 'El usuario ha sido registrado correctamente.',
       });
-      navigation.navigate('LoginScreen')
+      navigateLogin();
+    }else{
+      Toast.show({
+        type: 'error',
+        text1: 'El usuario ya existe.',
+      });
     }
   };
 
-  const validateEmail = (email) => {
-    const expression = /(?!.*\.{2})^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([\t]*\r\n)?[\t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([\t]*\r\n)?[\t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
-    return expression.test(String(email).toLowerCase())
+  const addUserToDDBB = async () => {
+    let result = false;
+    await fetch(petitions.register_local, {
+      method: "PUT",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }),
+      body: JSON.stringify({
+        user: user,
+        password: password,
+        name: firstName,
+        surname: lastName,
+        permission: false
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if(responseJson.code === 200) {
+          result = true;
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    return result;
   }
 
+  // const validateEmail = (email) => {
+  //   const expression = /(?!.*\.{2})^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([\t]*\r\n)?[\t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([\t]*\r\n)?[\t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
+  //   return expression.test(String(email).toLowerCase())
+  // }
+
   const navigateLogin = () => {
+    setFirstName(null);
+    setLastName(null);
+    setUser(null);
+    setPassword(null);
+    setConfirmPassword(null);
     navigation.navigate("LoginScreen");
   };
 
@@ -80,36 +114,35 @@ const LoginScreen: React.FC = () => {
       <View>
         <Toast />
         <View style={styles.headerContainer}>
-          <Text style={styles.header}>Welcome aboard!</Text>
+          <Text style={styles.header}>Bienvenido!</Text>
         </View>
         <View>
           <View style={styles.inputContainer}>
-            <Text style={styles.text}>First name</Text>
+            <Text style={styles.text}>Nombre</Text>
             <TextInput
               style={styles.input}
               onChangeText={setFirstName}
-              placeholder={"First name"}
+              placeholder={"Nombre"}
             />
           </View>
         </View>
         <View>
           <View style={styles.inputContainer}>
-            <Text style={styles.text}>Last name</Text>
+            <Text style={styles.text}>Apellidos</Text>
             <TextInput
               style={styles.input}
               onChangeText={setLastName}
-              placeholder={"Last name"}
+              placeholder={"Apellidos"}
             />
           </View>
         </View>
         <View>
           <View style={styles.inputContainer}>
-            <Text style={styles.text}>Email</Text>
+            <Text style={styles.text}>Usuario</Text>
             <TextInput
               style={styles.input}
-              onChangeText={setEmail}
-              placeholder={"Email"}
-              keyboardType="email-address"
+              onChangeText={setUser}
+              placeholder={"Usuario"}
             />
           </View>
         </View>

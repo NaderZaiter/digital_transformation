@@ -7,6 +7,7 @@ import {
   TextInput,
   SafeAreaView,
   StatusBar,
+  Button,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -25,21 +26,12 @@ const AddBudgetComponent = ({ navigation }) => {
     pickerRef.current.blur();
   }
 
-
-  const Submit = () => {
+  const submit = () => {
 
   };
 
-  const getNotes = () => {
-    _.map(notes, (note, index) => {
-      return (<Text key={index}>{note.value}</Text>)
-    })
-  }
-
-
   return (
-    <SafeAreaView style={styles.scrollContainer}>
-    <ScrollView style={styles.scrollView}>
+    <ScrollView>
       <View style={styles.container}>
         <View style={styles.container}>
           <Text>Acerca del presupuesto:</Text>
@@ -112,19 +104,23 @@ const AddBudgetComponent = ({ navigation }) => {
           <TextInput style={styles.input} placeholder="IBAN"></TextInput>
           <Text>Fecha vencimiento:</Text>
           <TextInput style={styles.input} placeholder="dd/mm/yyyy"></TextInput>
-          {getNotes}
+          {notes.map((note) => {
+            return (
+            <View key={note.id}>
+              <Text>{note.value}</Text>
+            </View>
+            )
+          })}
+        </View>
+        <View>
+            <Button title="Agregar presupuesto" color={colors.black} onPress={submit} />
         </View>
       </View>
     </ScrollView>
-    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
-  },
   scrollView: {
     paddingHorizontal: 20
   },
