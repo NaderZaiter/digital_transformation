@@ -3,8 +3,8 @@ import { ScrollView, TextInput, TouchableOpacity } from "react-native-gesture-ha
 import { Text, View, StyleSheet, Button } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import { colors } from "../../constants/palette";
-import Toast from "react-native-toast-message";
 import { petitions } from "../../constants/petitions";
+import notification from "../../helpers/toast";
 
 const LoginScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -16,46 +16,22 @@ const LoginScreen: React.FC = () => {
 
   const register = async () => {
     if (!firstName) {
-      Toast.show({
-        type: 'error',
-        text1: 'El nombre es obligatorio.',
-      });
+      notification.danger({message: 'El nombre es obligatorio.', useNativeToast: true, duration: 2000});
     } else if (!lastName) {
-      Toast.show({
-        type: 'error',
-        text1: 'Los apellidos son obligatorios.',
-      });
+      notification.danger({message: 'Los apellidos son obligatorios.', useNativeToast: true, duration: 2000});
     } else if (!user) {
-      Toast.show({
-        type: 'error',
-        text1: 'El usuario es obligatorio.',
-      });
+      notification.danger({message: 'El usuario es obligatorio.', useNativeToast: true, duration: 2000});
     } else if (!password) {
-      Toast.show({
-        type: 'error',
-        text1: 'La contraseña es obligatoria.',
-      });
+      notification.danger({message: 'La contraseña es obligatoria.', useNativeToast: true, duration: 2000});
     } else if (!confirmPassword) {
-      Toast.show({
-        type: 'error',
-        text1: 'La confirmación de la contraseña es obligatoria.',
-      });
+      notification.danger({message: 'La confirmación de la contraseña es obligatoria.', useNativeToast: true, duration: 2000});
     } else if (password !== confirmPassword) {
-      Toast.show({
-        type: 'error',
-        text1: 'Las contraseñas no coinciden.',
-      });
+      notification.danger({message: 'Las contraseñas no coinciden.', useNativeToast: true, duration: 2000});
     } else if(await addUserToDDBB()){
-      Toast.show({
-        type: 'success',
-        text1: 'El usuario ha sido registrado correctamente.',
-      });
+      notification.success({message: 'Usuario registrado correctamente.', useNativeToast: true, duration: 2000});
       navigateLogin();
     }else{
-      Toast.show({
-        type: 'error',
-        text1: 'El usuario ya existe.',
-      });
+      notification.danger({message: 'El usuario ya existe.', useNativeToast: true, duration: 2000});
     }
   };
 
@@ -112,7 +88,6 @@ const LoginScreen: React.FC = () => {
   return (
     <ScrollView>
       <View>
-        <Toast />
         <View style={styles.headerContainer}>
           <Text style={styles.header}>Bienvenido!</Text>
         </View>

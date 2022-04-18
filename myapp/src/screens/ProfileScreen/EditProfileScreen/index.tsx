@@ -8,7 +8,7 @@ import DatePicker from "react-native-datepicker";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { store } from "../../../redux/store";
 import { updateUserProfile } from "../../../redux/slices/userSlice";
-import Toast from "react-native-toast-message";
+import notification from "../../../helpers/toast";
 
 const EditProfileScreen = ({ navigation }) => {
   const user = useSelector((state) => state?.user);
@@ -32,21 +32,12 @@ const EditProfileScreen = ({ navigation }) => {
 
   const Submit = () => {
     if (!firstName) {
-      Toast.show({
-        type: 'error',
-        text1: 'El nombre es obligatorio.',
-      });
+      notification.danger({message: 'El nombre es obligatorio.', useNativeToast: true, duration: 2000});
     } else if (!lastName) {
-      Toast.show({
-        type: 'error',
-        text1: 'Los apellidos son obligatorios.',
-      });
+      notification.danger({message: 'Los apellidos son obligatorios.', useNativeToast: true, duration: 2000});
     }
     else if (!dateOfBirth) {
-      Toast.show({
-        type: 'error',
-        text1: 'La fecha de nacimiento es obligatoria.',
-      });
+      notification.danger({message: 'La fecha de nacimiento es obligatoria.', useNativeToast: true, duration: 2000});
     } else {
       store.dispatch(
         updateUserProfile({
@@ -57,10 +48,7 @@ const EditProfileScreen = ({ navigation }) => {
         })
       );
       navigation.goBack();
-      Toast.show({
-        type: 'success',
-        text1: 'Tu perfil ha sido actualizado correctamente.',
-      });
+      notification.success({message: 'Perfil editado correctamente.', useNativeToast: true, duration: 2000});
     }
   };
 
@@ -75,7 +63,6 @@ const EditProfileScreen = ({ navigation }) => {
   return (
     <ScrollView>
       <View>
-        <Toast />
         <View style={styles.headContainer}>
           <View style={styles.avatar}>
             <Avatar

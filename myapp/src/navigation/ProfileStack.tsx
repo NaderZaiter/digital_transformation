@@ -3,7 +3,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { colors } from "../constants/palette";
 import EditProfileScreen from "../screens/ProfileScreen/EditProfileScreen";
 import ProfileScreen from "../screens/ProfileScreen/ProfileScreen";
-import AddBudgetScreen from "../screens/AddBudgetScreen";
 
 export function ProfileStack() {
   const RootStackNav = createStackNavigator();

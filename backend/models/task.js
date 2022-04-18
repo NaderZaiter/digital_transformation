@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     days_number: DataTypes.INTEGER,
     day_price: DataTypes.DOUBLE,
     cost: DataTypes.DOUBLE,
-    proveedor: DataTypes.STRING,
+    supplier: DataTypes.STRING,
     invoice_number: DataTypes.STRING,
     expiration_date: DataTypes.STRING,
     payment_method: DataTypes.STRING,

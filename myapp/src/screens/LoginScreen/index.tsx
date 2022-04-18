@@ -5,8 +5,8 @@ import { store } from "../../redux/store";
 import { updateUserProfile } from "../../redux/slices/userSlice";
 import { useNavigation } from "@react-navigation/core";
 import { colors } from "../../constants/palette";
-import Toast from 'react-native-toast-message';
 import { petitions } from "../../constants/petitions";
+import notification from "../../helpers/toast";
 
 const LoginScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -40,31 +40,14 @@ const LoginScreen: React.FC = () => {
   }
 
   const login = async() => {
-    if (!user && !password) {
-      Toast.show({
-        type: 'error',
-        text1: 'El usuario y la contraseña son obligatorios.',
-      });
-    } else if (!user) {
-      Toast.show({
-        type: 'error',
-        text1: 'El usuario es obligatorios.',
-      });
+    if (!user) {
+      notification.danger({message: 'El usuario es obligatorio.', useNativeToast: true, duration: 2000});
     } else if (!password) {
-      Toast.show({
-        type: 'error',
-        text1: 'La contraseña es obligatoria.',
-      });
+      notification.danger({message: 'La contraseña es obligatoria.', useNativeToast: true, duration: 2000});
     } else if (await existUserWithPermissions(user, password)) {
-      Toast.show({
-        type: 'success',
-        text1: 'Bienvenido.',
-      });
+      notification.success({message: 'Bienvenido.', useNativeToast: true, duration: 2000});
     } else {
-      Toast.show({
-        type: 'error',
-        text1: 'Usuario sin permisos.',
-      });
+      notification.danger({message: 'Usuario sin permisos.', useNativeToast: true, duration: 2000});
     }
   };
 
@@ -90,7 +73,6 @@ const LoginScreen: React.FC = () => {
 
   return (
     <View>
-      <Toast />
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Sign in</Text>
       </View>
@@ -128,7 +110,6 @@ const LoginScreen: React.FC = () => {
           </View>
         </View>
       </View>
-      <Toast />
     </View>
   );
 };

@@ -1,7 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { colors } from "../constants/palette";
-import AddBudgetScreen from "../screens/AddBudgetScreen";
 import ImagesRightsScreen from "../screens/ImagesRightsScreen";
 
 export function ImagesRightsStack() {

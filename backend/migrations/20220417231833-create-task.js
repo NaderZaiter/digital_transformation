@@ -22,7 +22,7 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DOUBLE
       },
-      proveedor: {
+      supplier: {
         allowNull: true,
         type: Sequelize.STRING
       },

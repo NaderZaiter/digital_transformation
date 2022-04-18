@@ -5,6 +5,7 @@ import { colors } from "../constants/palette";
 import BudgetsScreen from "../screens/BudgetsScreen";
 import AddBudgetScreen from "../screens/AddBudgetScreen";
 import ModifyBudgetScreen from "../screens/ModifyBudgetScreen";
+import AddOrModifyTaskScreen from "../screens/AddOrModifyTaskScreen";
 
 export function BudgetStack() {
   const RootStackNav = createStackNavigator();
@@ -30,6 +31,15 @@ export function BudgetStack() {
         component={AddBudgetScreen}
         options={{
           title: "Nuevo presupuesto",
+          headerTintColor: colors.white,
+          headerStyle: {
+            backgroundColor: colors.primary
+          }
+        }} />
+        <RootStackNav.Screen name="AddOrModifyTaskScreen"
+        component={AddOrModifyTaskScreen}
+        options={{
+          title: "Agregar/modificar tarea",
           headerTintColor: colors.white,
           headerStyle: {
             backgroundColor: colors.primary
