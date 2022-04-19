@@ -4,32 +4,31 @@ module.exports = {
     await queryInterface.createTable('Budgets', {
       id: {
         allowNull: false,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       creation_date: {
         allowNull: true,
         type: Sequelize.STRING
       },
       budget_number: {
-        allowNull: true,
+        allowNull: false,
         type: Sequelize.STRING
       },
       total_costs: {
         allowNull: true,
-        type: Sequelize.DOUBLE
+        type: Sequelize.STRING
       },
       photographic_production: {
         allowNull: true,
-        type: Sequelize.DOUBLE
+        type: Sequelize.STRING
       },
       agency_fee: {
         allowNull: true,
-        type: Sequelize.DOUBLE
+        type: Sequelize.STRING
       },
       total_budget: {
         allowNull: true,
-        type: Sequelize.DOUBLE
+        type: Sequelize.STRING
       },
       expiration_date: {
         allowNull: true,
@@ -37,6 +36,10 @@ module.exports = {
       },
       iban: {
         allowNull: true,
+        type: Sequelize.STRING
+      },
+      user: {
+        allowNull: false,
         type: Sequelize.STRING
       },
     });

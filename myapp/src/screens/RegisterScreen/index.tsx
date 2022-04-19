@@ -16,22 +16,26 @@ const LoginScreen: React.FC = () => {
 
   const register = async () => {
     if (!firstName) {
-      notification.danger({message: 'El nombre es obligatorio.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'El nombre es obligatorio', useNativeToast: true, duration: 2000});
     } else if (!lastName) {
-      notification.danger({message: 'Los apellidos son obligatorios.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'Los apellidos son obligatorios', useNativeToast: true, duration: 2000});
     } else if (!user) {
-      notification.danger({message: 'El usuario es obligatorio.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'El usuario es obligatorio', useNativeToast: true, duration: 2000});
     } else if (!password) {
-      notification.danger({message: 'La contraseña es obligatoria.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'La contraseña es obligatoria', useNativeToast: true, duration: 2000});
+    } else if (password.indexOf(' ') != -1) {
+      notification.danger({message: 'La contraseña no puede tener espacios en blanco', useNativeToast: true, duration: 2000});
     } else if (!confirmPassword) {
-      notification.danger({message: 'La confirmación de la contraseña es obligatoria.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'La confirmación de la contraseña es obligatoria', useNativeToast: true, duration: 2000});
+    } else if (confirmPassword.indexOf(' ') != -1) {
+      notification.danger({message: 'La confirmación de la contraseña no puede tener espacios en blanco', useNativeToast: true, duration: 2000});
     } else if (password !== confirmPassword) {
-      notification.danger({message: 'Las contraseñas no coinciden.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'Las contraseñas no coinciden', useNativeToast: true, duration: 2000});
     } else if(await addUserToDDBB()){
-      notification.success({message: 'Usuario registrado correctamente.', useNativeToast: true, duration: 2000});
+      notification.success({message: 'Usuario registrado correctamente', useNativeToast: true, duration: 2000});
       navigateLogin();
     }else{
-      notification.danger({message: 'El usuario ya existe.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'El usuario ya existe', useNativeToast: true, duration: 2000});
     }
   };
 
@@ -44,10 +48,10 @@ const LoginScreen: React.FC = () => {
         Accept: "application/json",
       }),
       body: JSON.stringify({
-        user: user,
-        password: password,
-        name: firstName,
-        surname: lastName,
+        user: user.trim(),
+        password: password.trim(),
+        name: firstName.toLowerCase().trim(),
+        surname: lastName.toLowerCase().trim(),
         permission: false
       }),
     })

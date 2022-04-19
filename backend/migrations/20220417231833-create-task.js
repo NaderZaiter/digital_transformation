@@ -12,15 +12,19 @@ module.exports = {
       },
       days_number: {
         allowNull: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       day_price: {
         allowNull: true,
-        type: Sequelize.DOUBLE
+        type: Sequelize.STRING
+      },
+      total_price: {
+        allowNull: true,
+        type: Sequelize.STRING
       },
       cost: {
         allowNull: true,
-        type: Sequelize.DOUBLE
+        type: Sequelize.STRING
       },
       supplier: {
         allowNull: true,
@@ -46,6 +50,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      budget_number: {
+        allowNull: false,
+        type: Sequelize.STRING
+      }
     });
   },
   async down(queryInterface, Sequelize) {

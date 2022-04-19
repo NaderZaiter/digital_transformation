@@ -10,15 +10,17 @@ module.exports = (sequelize, DataTypes) => {
   Task.init({
     description: DataTypes.STRING,
     category: DataTypes.STRING,
-    days_number: DataTypes.INTEGER,
-    day_price: DataTypes.DOUBLE,
-    cost: DataTypes.DOUBLE,
+    days_number: DataTypes.STRING,
+    day_price: DataTypes.STRING,
+    total_price: DataTypes.STRING,
+    cost: DataTypes.STRING,
     supplier: DataTypes.STRING,
     invoice_number: DataTypes.STRING,
     expiration_date: DataTypes.STRING,
     payment_method: DataTypes.STRING,
     payment_date: DataTypes.STRING,
-    id_budget: DataTypes.STRING
+    id_budget: DataTypes.STRING,
+    budget_number: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Task',

@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
     postal_code: DataTypes.STRING,
     city: DataTypes.STRING,
     province: DataTypes.STRING,
-    id_budget: DataTypes.STRING
+    id_budget: DataTypes.STRING,
+    budget_number: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Client',

@@ -3,15 +3,14 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface User {
     userProfile?: {
         id?: string;
-        timestamp?: string;
-        email?: string;
         firstName?: string;
         lastName?: string;
-        dateOfBirth: string;
         profileImage?: string;
-        gender?: string;
         profile_picture_url?: string;
         is_available?: number;
+        permission?: number;
+        user?: string,
+        password?: string
         token?: string;
     }
 }

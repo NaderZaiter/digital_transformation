@@ -11,12 +11,13 @@ module.exports = (sequelize, DataTypes) => {
     id: DataTypes.STRING,
     creation_date: DataTypes.STRING,
     budget_number: DataTypes.STRING,
-    total_costs: DataTypes.DOUBLE,
-    photographic_production: DataTypes.DOUBLE,
-    agency_fee: DataTypes.DOUBLE,
-    total_budget: DataTypes.DOUBLE,
+    total_costs: DataTypes.STRING,
+    photographic_production: DataTypes.STRING,
+    agency_fee: DataTypes.STRING,
+    total_budget: DataTypes.STRING,
     expiration_date: DataTypes.STRING,
-    iban: DataTypes.STRING
+    iban: DataTypes.STRING,
+    user: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Budget',

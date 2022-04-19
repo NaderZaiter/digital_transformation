@@ -30,7 +30,7 @@ export function BudgetStack() {
       <RootStackNav.Screen name="AddBudgetScreen"
         component={AddBudgetScreen}
         options={{
-          title: "Nuevo presupuesto",
+          title: "Agregar/modificar presupuesto",
           headerTintColor: colors.white,
           headerStyle: {
             backgroundColor: colors.primary
@@ -48,7 +48,7 @@ export function BudgetStack() {
         <RootStackNav.Screen name="ModifyBudgetScreen"
         component={ModifyBudgetScreen}
         options={{
-          title: "Modificar presupuesto",
+          title: "Modificar/eliminar presupuesto",
           headerTintColor: colors.white,
           headerStyle: {
             backgroundColor: colors.primary

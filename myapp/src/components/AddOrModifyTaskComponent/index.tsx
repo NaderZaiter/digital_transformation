@@ -5,32 +5,32 @@ import {
   StyleSheet,
   TextInput,
   Button,
+  Picker
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import _ from "lodash";
 import notification from "../../helpers/toast";
-const AddOrModifyTaskComponent = ({ taskParemeter }) => {
+import { useRoute } from "@react-navigation/native";
+import {DatePicker} from '@material-ui/pickers'
+
+const AddOrModifyTaskComponent = ({ navigation }) => {
   const user = useSelector((state) => state?.user);
   const pickerRef = useRef();
-  const [tasks, setTasks] = useState([]);
 
   const [taskDescription, setTaskDescription] = useState("");
   const [taskCategory, setTaskCategory] = useState("");
   const [taskDays, setTaskDays] = useState("");
   const [taskDayPrice, setTaskDayPrice] = useState("");
   const [taskTotalPrice, setTaskTotalPrice] = useState("");
-  const [taskCost, setTaskCost] = useState("");
+  const [taskCost, setTaskCost] = useState("0");
   const [taskSupplier, setTaskSupplier] = useState("");
   const [taskInvoiceNumber, setTaskInvoiceNumber] = useState("");
-  const [taskExpirationDate, setTaskExpirationDate] = useState("");
+  const [taskExpirationDate, setTaskExpirationDate] = useState(new Date());
   const [taskPaymentMethod, setTaskPaymentMethod] = useState("");
-  const [taskPaymentDate, setTaskPaymentDate] = useState("");
+  const [taskPaymentDate, setTaskPaymentDate] = useState(new Date());
   
-  if(taskParemeter){
-    
-  }
  
   function open() {
     pickerRef.current.focus();
@@ -41,44 +41,90 @@ const AddOrModifyTaskComponent = ({ taskParemeter }) => {
 
   const addTask = () => {
     if(!taskDescription){
-      notification.danger({message: 'La descripción es obligatoria.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'La descripción es obligatoria', useNativeToast: true, duration: 2000});
     }else if(!taskCategory){
-      notification.danger({message: 'La categoría es obligatoria.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'La categoría es obligatoria', useNativeToast: true, duration: 2000});
     }else{
-      notification.success({message: 'Tarea agregada correctamente.', useNativeToast: true, duration: 2000});
-      setTasks([...tasks, getObjectTask()]);
-      resetValuesTask();
+      const newTask = getObjectTask();
+      setTaskValues(resetValuesTask());
+      if(_.get(route, 'params.modifyTask.index') >= 0){
+        notification.success({message: 'Tarea modificada correctamente', useNativeToast: true, duration: 2000});
+        navigation.navigate("AddBudgetScreen", {modifiedTask: {index: _.get(route, 'params.modifyTask.index'), newTask: newTask}});
+      }else{
+        notification.success({message: 'Tarea agregada correctamente', useNativeToast: true, duration: 2000});
+        navigation.navigate("AddBudgetScreen", {newTask: newTask});
+      }
     }
   };
 
   const getObjectTask = () => {
     return {
-      taskDescription: taskDescription,
-      taskCategory: taskCategory,
-      taskDays: taskDays,
-      taskDayPrice: taskDayPrice,
-      taskTotalPrice: taskTotalPrice,
-      taskCost: taskCost,
-      taskSupplier: taskSupplier,
-      taskInvoiceNumber: taskInvoiceNumber,
+      taskDescription: taskDescription.trim(),
+      taskCategory: taskCategory.trim(),
+      taskDays: taskDays.trim(),
+      taskDayPrice: taskDayPrice.trim(),
+      taskTotalPrice: taskTotalPrice.trim(),
+      taskCost: taskCost.trim(),
+      taskSupplier: taskSupplier.trim(),
+      taskInvoiceNumber: taskInvoiceNumber.trim(),
       taskExpirationDate: taskExpirationDate,
-      taskPaymentMethod: taskPaymentMethod,
+      taskPaymentMethod: taskPaymentMethod.trim(),
       taskPaymentDate: taskPaymentDate,
     }
   }
 
+  const calculateTotalPrice = () => {
+    if(taskDayPrice && taskDays) {
+      let multi = (Number(taskDayPrice) * Number(taskDays)).toString();
+      if(taskTotalPrice !== multi){
+        setTaskTotalPrice(multi);
+      }
+    }
+  }
+
+  const formatDate = (date: Date) :string => {
+    let result = "";
+    if(date){
+      result = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    }
+    return result;
+  }
+
+  const setTaskValues = (task) => {
+      setTaskDescription(task.taskDescription);
+      setTaskCategory(task.taskCategory);
+      setTaskDays(task.taskDays);
+      setTaskDayPrice(task.taskDayPrice);
+      setTaskTotalPrice(task.taskTotalPrice);
+      setTaskCost(task.taskCost);
+      setTaskSupplier(task.taskSupplier);
+      setTaskInvoiceNumber(task.taskInvoiceNumber);
+      setTaskExpirationDate(task.taskExpirationDate);
+      setTaskPaymentMethod(task.taskPaymentMethod);
+      setTaskPaymentDate(task.taskPaymentDate);
+  }
+
   const resetValuesTask = () => {
-    setTaskDescription("");
-    setTaskCategory("");
-    setTaskDays("");
-    setTaskDayPrice("");
-    setTaskTotalPrice("");
-    setTaskCost("");
-    setTaskSupplier("");
-    setTaskInvoiceNumber("");
-    setTaskExpirationDate("");
-    setTaskPaymentMethod("");
-    setTaskPaymentDate("");
+    return {
+      taskDescription: "",
+      taskCategory: "",
+      taskDays: "",
+      taskDayPrice: "",
+      taskTotalPrice: "",
+      taskCost: "",
+      taskSupplier: "",
+      taskInvoiceNumber: "",
+      taskExpirationDate: new Date(),
+      taskPaymentMethod: "",
+      taskPaymentDate: new Date(),
+    }
+  }
+
+  const route = useRoute()
+  const modifyTask = _.get(route, 'params.modifyTask.task');
+  if(modifyTask){
+    setTaskValues(modifyTask);
+    _.set(route, 'params.modifyTask.task', null);
   }
 
   return (
@@ -89,24 +135,36 @@ const AddOrModifyTaskComponent = ({ taskParemeter }) => {
             <TextInput style={styles.input} placeholder="Descripción" onChangeText={setTaskDescription}></TextInput>
             <Text>Categoría:</Text>
             <TextInput style={styles.input} placeholder="Categoría" onChangeText={setTaskCategory}></TextInput>
+            {/* <Picker ref={pickerRef} selectedValue={setTaskCategory}>
+              <Picker.item label="Realización" value="Realización"></Picker.item>
+              <Picker.item label="Estilismo" value="Estilismo"></Picker.item>
+              <Picker.item label="Localizaciòn" value="Localizaciòn"></Picker.item>
+              <Picker.item label="Producción" value="Producción"></Picker.item>
+              <Picker.item label="PP" value="PP"></Picker.item>
+              <Picker.item label="Extras" value="Extras"></Picker.item>
+            </Picker> */}
             <Text>Jornadas:</Text>
-            <TextInput style={styles.input} placeholder="1" onChangeText={setTaskDays}></TextInput>
+            <TextInput value={taskDays} style={styles.input} placeholder="1" onChangeText={setTaskDays}></TextInput>
             <Text>Precio/unidad:</Text>
-            <TextInput style={styles.input} placeholder="0" onChangeText={setTaskDayPrice}></TextInput>
+            <TextInput value={taskDayPrice} style={styles.input} placeholder="0" onChangeText={setTaskDayPrice}></TextInput>
             <Text>Precio total:</Text>
-            <TextInput style={styles.input} placeholder="0" onChangeText={setTaskTotalPrice}></TextInput>
+            <TextInput editable={false} value={calculateTotalPrice()} style={styles.input} placeholder="0" onChangeText={setTaskTotalPrice}></TextInput>
             <Text>Coste:</Text>
-            <TextInput style={styles.input} placeholder="Coste" onChangeText={setTaskCost}></TextInput>
+            <TextInput value={taskCost} style={styles.input} placeholder="Coste" onChangeText={setTaskCost}></TextInput>
             <Text>Proveedor:</Text>
             <TextInput style={styles.input} placeholder="Proveedor" onChangeText={setTaskSupplier}></TextInput>
             <Text>Número factura:</Text>
             <TextInput style={styles.input} placeholder="Número factura" onChangeText={setTaskInvoiceNumber}></TextInput>
-            <Text>Vencimiento:</Text>
-            <TextInput style={styles.input} placeholder="Vencimiento" onChangeText={setTaskExpirationDate}></TextInput>
+            <Text>Fecha de vencimiento:</Text>
+            <DatePicker value={taskExpirationDate} onChange={setTaskExpirationDate}
+              style={styles.datePicker.style}
+              mode="date" placeholder="Selecciona la fecha" format="yyyy-mm-dd"/>
             <Text>Forma de pago:</Text>
             <TextInput style={styles.input} placeholder="Forma de pago" onChangeText={setTaskPaymentMethod}></TextInput>
             <Text>Fecha de pago:</Text>
-            <TextInput style={styles.input} placeholder="Fecha de pago" onChangeText={setTaskPaymentDate}></TextInput>
+            <DatePicker value={taskPaymentDate} onChange={setTaskPaymentDate}
+              style={styles.datePicker.style}
+              mode="date" placeholder="Selecciona la fecha" format="yyyy-mm-dd"/>
             <Button title="Agregar" color={colors.primary} onPress={addTask}/>
         </View>
       </View>
@@ -115,6 +173,19 @@ const AddOrModifyTaskComponent = ({ taskParemeter }) => {
 };
 
 const styles = StyleSheet.create({
+  datePicker:{
+    customStyles: {
+      dateInput: {
+        height: 40,
+        padding: 10,
+        backgroundColor: colors.background,
+        marginHorizontal: 15
+      }
+    },
+    style:{
+      width: "100%"
+    }
+  },
   scrollView: {
     paddingHorizontal: 20
   },

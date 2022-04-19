@@ -58,7 +58,7 @@ const BudgetsScreen = ({ navigation }) => {
       </View>
       <View style={styles.registerBtnContainer}>
         <TouchableOpacity onPress={navigateModifyBudgetScreen}>
-          <Text style={styles.signinrBtn}>Modificar presupuesto</Text>
+          <Text style={styles.signinrBtn}>Modificar/eliminar presupuesto</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.registerBtnContainer}>

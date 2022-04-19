@@ -7,7 +7,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       cif: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING
       },
       street: {
@@ -31,6 +31,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       id_budget: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      budget_number: {
         allowNull: false,
         type: Sequelize.STRING
       },

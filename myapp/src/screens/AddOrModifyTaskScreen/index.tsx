@@ -2,11 +2,11 @@ import React from "react";
 import { View } from "react-native";
 import AddOrModifyTaskComponent from "../../components/AddOrModifyTaskComponent";
 
-const AddOrModifyTaskScreen = ({ taskParemeter }) => {
+const AddOrModifyTaskScreen = ({ navigation }) => {
 
   return (
     <View>
-      <AddOrModifyTaskComponent taskParemeter={taskParemeter} />
+      <AddOrModifyTaskComponent navigation={navigation} />
     </View>
   )
 };

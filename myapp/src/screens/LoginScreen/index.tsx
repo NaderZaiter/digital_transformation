@@ -22,8 +22,8 @@ const LoginScreen: React.FC = () => {
         Accept: "application/json",
       }),
       body: JSON.stringify({
-        user: user,
-        password: password,
+        user: user.trim(),
+        password: password.trim(),
       }),
     })
       .then((response) => response.json())
@@ -41,13 +41,15 @@ const LoginScreen: React.FC = () => {
 
   const login = async() => {
     if (!user) {
-      notification.danger({message: 'El usuario es obligatorio.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'El usuario es obligatorio', useNativeToast: true, duration: 2000});
     } else if (!password) {
-      notification.danger({message: 'La contraseña es obligatoria.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'La contraseña es obligatoria', useNativeToast: true, duration: 2000});
+    } else if (password.indexOf(' ') != -1) {
+      notification.danger({message: 'La contraseña no puede tener espacios en blanco', useNativeToast: true, duration: 2000});
     } else if (await existUserWithPermissions(user, password)) {
-      notification.success({message: 'Bienvenido.', useNativeToast: true, duration: 2000});
+      notification.success({message: 'Bienvenido', useNativeToast: true, duration: 2000});
     } else {
-      notification.danger({message: 'Usuario sin permisos.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'Usuario sin permisos', useNativeToast: true, duration: 2000});
     }
   };
 
@@ -58,9 +60,11 @@ const LoginScreen: React.FC = () => {
           id: user.id,
           firstName: user.name,
           lastName: user.surname,
-          email: user.email,
           profile_picture_url: user.profile_picture_url,
           is_available: true,
+          permission: user.permission,
+          user: user.user,
+          password: user.password,
           token: ''
         },
       })

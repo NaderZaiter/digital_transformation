@@ -32,12 +32,12 @@ const EditProfileScreen = ({ navigation }) => {
 
   const Submit = () => {
     if (!firstName) {
-      notification.danger({message: 'El nombre es obligatorio.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'El nombre es obligatorio', useNativeToast: true, duration: 2000});
     } else if (!lastName) {
-      notification.danger({message: 'Los apellidos son obligatorios.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'Los apellidos son obligatorios', useNativeToast: true, duration: 2000});
     }
     else if (!dateOfBirth) {
-      notification.danger({message: 'La fecha de nacimiento es obligatoria.', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'La fecha de nacimiento es obligatoria', useNativeToast: true, duration: 2000});
     } else {
       store.dispatch(
         updateUserProfile({
@@ -48,7 +48,7 @@ const EditProfileScreen = ({ navigation }) => {
         })
       );
       navigation.goBack();
-      notification.success({message: 'Perfil editado correctamente.', useNativeToast: true, duration: 2000});
+      notification.success({message: 'Perfil editado correctamente', useNativeToast: true, duration: 2000});
     }
   };
 
