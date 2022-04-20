@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useRef} from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors } from "../constants/palette";
@@ -8,38 +8,28 @@ import { ImagesRightsStack } from "./ImagesRightsStack";
 import { CollaboratorsStack } from "./CollaboratorsStack";
 import { ProfileStack } from "./ProfileStack";
 import { RemindersStack } from "./RemindersStack";
+import { Text, View, StyleSheet, Image } from "react-native";
 
 export function BottomTabs({ navigation }) {
   const BottomTabsNav = createBottomTabNavigator();
-  const navigationRef = React.useRef(null);
+  const navigationRef = useRef(null);
   return (
     <NavigationContainer ref={navigationRef}>
-      <BottomTabsNav.Navigator
-        initialRouteName="BudgetsScreen"
-        screenOptions={{
-          tabBarActiveTintColor: colors.black,
-          tabBarInactiveTintColor: colors.text,
-          tabBarShowLabel: true,
-          tabBarAllowFontScaling: false,
-          tabBarHideOnKeyboard: true,
-          tabBarLabelStyle: {
-            fontWeight: "bold",
-            fontSize: 10,
-          },
-        }}
-      >
+      <BottomTabsNav.Navigator initialRouteName="BudgetsScreen" screenOptions={styles.screenOptions}>
         <BottomTabsNav.Screen
           name="BudgetStack"
           component={BudgetStack}
           options={{
             title: "Presupuestos",
             headerShown: false,
-            tabBarIcon: ({ focused, color, size }) => (
-              <MaterialCommunityIcons
-                name={"blood-bag"}
-                size={28}
-                color={color}
-              />
+            tabBarIcon: ({ focused}) => (
+              <View style={styles.view}>
+                <Image
+                  source={require("../../assets/budget-icon.png")}
+                  resizeMode='contain'
+                  style={{width: 25, height: 25, tintColor: focused ? colors.salmon : colors.iconGrey}}
+                />
+              </View>
             ),
           }}
         />
@@ -49,12 +39,14 @@ export function BottomTabs({ navigation }) {
           options={{
             title: "Imágenes",
             headerShown: false,
-            tabBarIcon: ({ focused, color, size }) => (
-              <MaterialCommunityIcons
-                name={"card-plus"}
-                size={28}
-                color={color}
-              />
+            tabBarIcon: ({ focused}) => (
+              <View style={styles.view}>
+                <Image
+                  source={require("../../assets/imagen-icon.png")}
+                  resizeMode='contain'
+                  style={{width: 25, height: 25, tintColor: focused ? colors.salmon : colors.iconGrey}}
+                />
+              </View>
             ),
           }}
         />
@@ -64,8 +56,14 @@ export function BottomTabs({ navigation }) {
           options={{
             title: "Colaboradores",
             headerShown: false,
-            tabBarIcon: ({ focused, color, size }) => (
-              <MaterialCommunityIcons name={"map"} size={28} color={color} />
+            tabBarIcon: ({ focused}) => (
+              <View style={styles.view}>
+                <Image
+                  source={require("../../assets/collaborators-icon.png")}
+                  resizeMode='contain'
+                  style={{width: 25, height: 25, tintColor: focused ? colors.salmon : colors.iconGrey}}
+                />
+              </View>
             ),
           }}
         />
@@ -78,8 +76,14 @@ export function BottomTabs({ navigation }) {
             headerStyle: {
               backgroundColor: colors.primary,
             },
-            tabBarIcon: ({ focused, color, size }) => (
-              <MaterialCommunityIcons name={"bell"} size={28} color={color} />
+            tabBarIcon: ({ focused}) => (
+              <View style={styles.view}>
+                <Image
+                  source={require("../../assets/reminder-icon.png")}
+                  resizeMode='contain'
+                  style={{width: 25, height: 25, tintColor: focused ? colors.salmon : colors.iconGrey}}
+                />
+              </View>
             ),
           }}
         />
@@ -89,12 +93,14 @@ export function BottomTabs({ navigation }) {
           options={{
             title: "Perfil",
             headerShown: false,
-            tabBarIcon: ({ focused, color, size }) => (
-              <MaterialCommunityIcons
-                name={"account"}
-                size={28}
-                color={color}
-              />
+            tabBarIcon: ({ focused}) => (
+              <View style={styles.view}>
+                <Image
+                  source={require("../../assets/profile-icon.png")}
+                  resizeMode='contain'
+                  style={{width: 25, height: 25, tintColor: focused ? colors.salmon : colors.iconGrey}}
+                />
+              </View>
             ),
           }}
         />
@@ -102,3 +108,21 @@ export function BottomTabs({ navigation }) {
     </NavigationContainer>
   );
 }
+const styles = StyleSheet.create({
+  screenOptions: {
+    tabBarActiveTintColor: colors.black,
+    tabBarInactiveTintColor: colors.text,
+    tabBarShowLabel: true,
+    tabBarAllowFontScaling: false,
+    tabBarHideOnKeyboard: true,
+    tabBarLabelStyle: {
+      fontWeight: "bold",
+      fontSize: 10,
+    },
+  },
+  view: {
+    alignItems: "center",
+    justifyContent: 'center',
+    top: 2,
+  },
+});

@@ -116,14 +116,7 @@ const EditProfileScreen = ({ navigation }) => {
             format="YYYY-MM-DD"
             confirmBtnText="Chọn"
             cancelBtnText="Hủy"
-            customStyles={{
-              dateInput: {
-                paddingRight: "74%",
-                backgroundColor: colors.background,
-                borderWidth: 1,
-                borderColor: colors.white,
-              },
-            }}
+          
             onDateChange={(dateOfBirth) => {
               setDdateOfBirth(dateOfBirth);
             }}

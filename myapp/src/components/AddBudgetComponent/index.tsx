@@ -292,8 +292,8 @@ const AddBudgetComponent = ({ navigation }) => {
           <Text>Acerca del presupuesto:</Text>
           <Text>Fecha:</Text>
           <DatePicker value={creationDate} onChange={setCreationDate}
-           style={styles.datePicker.style}
-           mode="date" placeholder="Selecciona la fecha" format="yyyy-mm-dd"/>
+           style={{width: "100%"}}
+           placeholder="Selecciona la fecha" format="yyyy-mm-dd"/>
           <Text>Número:</Text>
           <TextInput style={styles.input} placeholder="Número presupuesto" onChangeText={setBudgetNumber}></TextInput>
           <Text>Referencia:</Text>
@@ -351,8 +351,8 @@ const AddBudgetComponent = ({ navigation }) => {
           <TextInput value={budgetIBAN} style={styles.input} placeholder="IBAN" onChangeText={setBudgetIBAN}></TextInput>
           <Text>Fecha vencimiento:</Text>
           <DatePicker value={budgetExpirationDate} onChange={setBudgetExpirationDate}
-           style={styles.datePicker.style}
-           mode="date" placeholder="Selecciona la fecha" format="yyyy-mm-dd"/>
+           style={{width: "100%"}}
+           placeholder="Selecciona la fecha" format="yyyy-mm-dd"/>
           {notes.map((note) => {
             return (
             <View key={note.id}>
@@ -370,19 +370,6 @@ const AddBudgetComponent = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  datePicker:{
-    customStyles: {
-      dateInput: {
-        height: 40,
-        padding: 10,
-        backgroundColor: colors.background,
-        marginHorizontal: 15
-      }
-    },
-    style:{
-      width: "100%"
-    }
-  },
   scrollView: {
     flexGrow: 1,
   },

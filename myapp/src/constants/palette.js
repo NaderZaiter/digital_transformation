@@ -2,6 +2,7 @@ export const colors = {
     primary: '#008080',
     primary_dark: '#40E0D0',
     primary_green: '#0B8E8B',
+    salmon: '#FA8072',
     red: '#DE0000',
     green: '#23CB66',
     gold: '#D2BA23',
@@ -16,6 +17,7 @@ export const colors = {
     blue: '#1D71B5',
     lightBlue: '#4992cc',
     lightGrey: '#e8fcf6',
+    iconGrey: '#748c94'
 }
 
 export const shadows = {

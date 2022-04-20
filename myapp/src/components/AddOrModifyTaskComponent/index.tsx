@@ -157,14 +157,14 @@ const AddOrModifyTaskComponent = ({ navigation }) => {
             <TextInput style={styles.input} placeholder="Número factura" onChangeText={setTaskInvoiceNumber}></TextInput>
             <Text>Fecha de vencimiento:</Text>
             <DatePicker value={taskExpirationDate} onChange={setTaskExpirationDate}
-              style={styles.datePicker.style}
-              mode="date" placeholder="Selecciona la fecha" format="yyyy-mm-dd"/>
+              style={{width: "100%"}}
+              placeholder="Selecciona la fecha" format="yyyy-mm-dd"/>
             <Text>Forma de pago:</Text>
             <TextInput style={styles.input} placeholder="Forma de pago" onChangeText={setTaskPaymentMethod}></TextInput>
             <Text>Fecha de pago:</Text>
             <DatePicker value={taskPaymentDate} onChange={setTaskPaymentDate}
-              style={styles.datePicker.style}
-              mode="date" placeholder="Selecciona la fecha" format="yyyy-mm-dd"/>
+              style={{width: "100%"}}
+              placeholder="Selecciona la fecha" format="yyyy-mm-dd"/>
             <Button title="Agregar" color={colors.primary} onPress={addTask}/>
         </View>
       </View>
@@ -173,19 +173,6 @@ const AddOrModifyTaskComponent = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  datePicker:{
-    customStyles: {
-      dateInput: {
-        height: 40,
-        padding: 10,
-        backgroundColor: colors.background,
-        marginHorizontal: 15
-      }
-    },
-    style:{
-      width: "100%"
-    }
-  },
   scrollView: {
     paddingHorizontal: 20
   },
