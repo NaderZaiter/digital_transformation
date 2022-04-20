@@ -24,13 +24,13 @@ const Toast = () => {
   const [messageType, setMessageType] = useState(null);
   const timeOutRef = useRef(null);
 
-  const animatedOpacity = useSharedValue(0);
+  // const animatedOpacity = useSharedValue(0);
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: animatedOpacity.value,
-    };
-  }, []);
+  // const animatedStyle = useAnimatedStyle(() => {
+  //   return {
+  //     opacity: animatedOpacity.value,
+  //   };
+  // }, []);
 
   const [timeOutDuration, setTimeOutDuration] = useState(5000);
 
@@ -50,9 +50,9 @@ const Toast = () => {
   const closeToast = useCallback(() => {
     setMessage(null);
     setTimeOutDuration(5000);
-    animatedOpacity.value = withTiming(0);
+    //animatedOpacity.value = withTiming(0);
     clearInterval(timeOutRef.current);
-  }, [animatedOpacity]);
+  }, []);
 
   useEffect(() => {
     if (message) {
@@ -72,9 +72,9 @@ const Toast = () => {
 
   useEffect(() => {
     if (message) {
-      animatedOpacity.value = withTiming(1, {duration: 1000});
+      //animatedOpacity.value = withTiming(1, {duration: 1000});
     }
-  }, [message, animatedOpacity]);
+  }, [message]);
 
   useEffect(() => {
     DeviceEventEmitter.addListener(SHOW_TOAST_MESSAGE, onNewToast);
@@ -100,7 +100,6 @@ const Toast = () => {
           elevation: 1,
           borderRadius: 4,
         },
-        animatedStyle,
       ]}>
       <TouchableOpacity onPress={closeToast}>
         <Text

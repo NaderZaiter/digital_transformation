@@ -20,16 +20,16 @@ import {DatePicker} from '@material-ui/pickers'
 import notification from "../../helpers/toast";
 import { petitions } from "../../constants/petitions";
 
-const {height} = Dimensions.get('window');
 const AddBudgetComponent = ({ navigation }) => {
   const user = useSelector((state) => state?.user);
+  const budgetInfo = useSelector((state) => state?.budget).budgetInfo;
   const pickerRef = useRef();
   const [notes, setNotes] = useState(budgetNotes);
   const [tasks, setTasks] = useState([]);
   const [creationDate, setCreationDate] = useState(new Date());
   const [budgetNumber, setBudgetNumber] = useState("");
   const [budgetReference, setBudgetReference] = useState("");
-  const [clientName, setClientName] = useState("");
+  const [clientName, setClientName] = useState("test");
   const [clientCIF, setClientCIF] = useState("");
   const [clientStreet, setClientStreet] = useState("");
   const [clientStreetNumber, setClientStreetNumber] = useState("");
@@ -46,8 +46,6 @@ const AddBudgetComponent = ({ navigation }) => {
   const [buttonText, setButtonText] = useState("Agregar presupuesto");
 
   const [state, setState] = useState({screenHeight: 0});
-
-  const scrollEnabled = state.screenHeight > height;
 
   function open() {
     pickerRef.current.focus();
@@ -184,10 +182,6 @@ const AddBudgetComponent = ({ navigation }) => {
     return result;
   }
 
-  const onContentSizeChange = (contentHeight) => {
-    setState({screenHeight: contentHeight})
-  };
-
   const navigateAddOrModifyTaskScreen = (params) => {
     navigation.navigate("AddOrModifyTaskScreen", params);
   };
@@ -195,20 +189,18 @@ const AddBudgetComponent = ({ navigation }) => {
   const getNewTask = () => {
     tasks.push(newTask);
     _.set(route, 'params.newTask', null);
-    calculateTotal();
   };
 
   const getModifiedTask = () => {
     tasks[modifiedTask.index] = modifiedTask.newTask;
     _.set(route, 'params.modifiedTask', null);
-    calculateTotal();
   };
 
   const getBudgetInfo = () => {
       setButtonText("Modificar presupuesto")
       if(budgetInfo.tasks){
-        budgetInfo.tasks.forEach(task => () => {
-          setTasks([...tasks, {
+        for(let task of budgetInfo.tasks){
+          tasks.push({
             taskDescription: task.description,
             taskCategory: task.category,
             taskDays: task.days_number,
@@ -220,8 +212,8 @@ const AddBudgetComponent = ({ navigation }) => {
             taskExpirationDate: new Date(task.expiration_date),
             taskPaymentMethod: task.payment_method,
             taskPaymentDate: new Date(task.payment_date),
-          }]);
-        })
+          });
+        }
       }
       setClientName(budgetInfo.client.name);
       setClientCIF(budgetInfo.client.cif);
@@ -231,7 +223,7 @@ const AddBudgetComponent = ({ navigation }) => {
       setClientCity(budgetInfo.client.city);
       setClientProvince(budgetInfo.client.province);
       setBudgetReference(budgetInfo.budget.id);
-      setCreationDate(new Date(budgetInfo.budget.creation_date));
+      setCreationDate(new Date(Number(budgetInfo.budget.creation_date.split('-')[0]), Number(budgetInfo.budget.creation_date.split('-')[1]) - 1,  Number(budgetInfo.budget.creation_date.split('-')[2])));
       setBudgetNumber(budgetInfo.budget.budget_number);
       setBudgetTotalCosts(budgetInfo.budget.total_costs);
       setPhotographicProduction(budgetInfo.budget.photographic_production);
@@ -240,23 +232,19 @@ const AddBudgetComponent = ({ navigation }) => {
       setBudgetExpirationDate(new Date(budgetInfo.budget.expiration_date));
       setBudgetIBAN(budgetInfo.budget.iban);
       setBudgetUser(budgetInfo.budget.user);
-    _.set(route, 'params.budgetInfo', null);
   };
 
-  const calculateTotal = (agencyFee?) => {
+  const calculateTotal = () => {
     let costs = 0;
     let photographicProduction = 0;
-    if(agencyFee) {
-      setAgencyFee(agencyFee);
-    }
-    tasks.forEach(task => () => {
+    for(let task of tasks){
       if(task.taskCost){
         costs+= Number(task.taskCost);
       }
       if(task.taskTotalPrice){
         photographicProduction+= Number(task.taskTotalPrice)
       }
-    })
+    }
     setBudgetTotalCosts(costs.toString());
     setPhotographicProduction(photographicProduction.toString());
     if(agencyFee){
@@ -269,54 +257,62 @@ const AddBudgetComponent = ({ navigation }) => {
   const route = useRoute()
   const newTask = _.get(route, 'params.newTask');
   const modifiedTask = _.get(route, 'params.modifiedTask');
-  const budgetInfo = _.get(route, 'params.budgetInfo');
   if(newTask){
     getNewTask();
   }else if(modifiedTask){
     getModifiedTask();
-  }else if(budgetInfo){
-    getBudgetInfo();
   }
-
-  
 
   const deleteTask = (index) => {
     setTasks(tasks.filter((task, indexTask) => indexTask !== index));
   };
+  
+  useEffect(() => {
+    if(budgetInfo){
+      getBudgetInfo();
+    }
+  }, [budgetInfo])
+
+  useEffect(() => {
+    calculateTotal();
+  }, [agencyFee]);
+
+  useEffect(() => {
+    calculateTotal();
+  }, [tasks]);
 
   return (
-    <ScrollView style={{flex:1}} contentContainerStyle={styles.scrollView} 
-      scrollEnabled={scrollEnabled} onContentSizeChange={onContentSizeChange}>
+    <ScrollView>
       <View style={styles.container}>
         <View style={styles.container}>
           <Text>Acerca del presupuesto:</Text>
           <Text>Fecha:</Text>
-          <DatePicker value={creationDate} onChange={setCreationDate}
+          <DatePicker disabled={(budgetInfo)} value={creationDate} onChange={setCreationDate}
            style={{width: "100%"}}
            placeholder="Selecciona la fecha" format="yyyy-mm-dd"/>
           <Text>Número:</Text>
-          <TextInput style={styles.input} placeholder="Número presupuesto" onChangeText={setBudgetNumber}></TextInput>
+          <TextInput editable={!(budgetInfo)} value={budgetNumber} style={styles.input} placeholder="Número presupuesto" onChangeText={setBudgetNumber}></TextInput>
           <Text>Referencia:</Text>
-          <TextInput style={styles.input} placeholder="Referencia presupuesto" onChangeText={setBudgetReference}></TextInput>
+          <TextInput editable={!(budgetInfo)} value={budgetReference} style={styles.input} placeholder="Referencia presupuesto" onChangeText={setBudgetReference}></TextInput>
         </View>
         <View style={styles.container}>
           <Text>Acerca del cliente:</Text>
             <Text>Nombre:</Text>
-            <TextInput style={styles.input} placeholder="Nombre cliente" onChangeText={setClientName}></TextInput>
+            <TextInput value={clientName} style={styles.input} placeholder="Nombre cliente" onChangeText={setClientName}></TextInput>
             <Text>C.I.F:</Text>
-            <TextInput style={styles.input} placeholder="CIF cliente" onChangeText={setClientCIF}></TextInput>
+            <TextInput value={clientCIF} style={styles.input} placeholder="CIF cliente" onChangeText={setClientCIF}></TextInput>
             <View style={styles.container}>
               <Text>Dirección:</Text>
               <Text>Calle:</Text>
-              <TextInput style={styles.input} placeholder="Calle" onChangeText={setClientStreet}></TextInput>
+              <TextInput value={clientStreet} style={styles.input} placeholder="Calle" onChangeText={setClientStreet}></TextInput>
               <Text>Número:</Text>
-              <TextInput style={styles.input} placeholder="Número" onChangeText={setClientStreetNumber}></TextInput>
+              <TextInput value={clientStreetNumber} style={styles.input} placeholder="Número" onChangeText={setClientStreetNumber}></TextInput>
               <Text>Código postal:</Text>
-              <TextInput style={styles.input} placeholder="CP" onChangeText={setClientPostalCode}></TextInput>
+              <TextInput value={clientPostalCode} style={styles.input} placeholder="CP" onChangeText={setClientPostalCode}></TextInput>
               <Text>Población:</Text>
-              <TextInput style={styles.input} placeholder="Población" onChangeText={setClientCity}></TextInput>
+              <TextInput value={clientCity} style={styles.input} placeholder="Población" onChangeText={setClientCity}></TextInput>
               <Text>Provincia:</Text>
-              <TextInput style={styles.input} placeholder="Provincia" onChangeText={setClientProvince}></TextInput>
+              <TextInput value={clientProvince} style={styles.input} placeholder="Provincia" onChangeText={setClientProvince}></TextInput>
             </View>
         </View>
         <View style={styles.container}>
@@ -341,7 +337,7 @@ const AddBudgetComponent = ({ navigation }) => {
           <Text>Producción fotográfica:</Text>
           <TextInput value={photographicProduction} style={styles.input} editable={false} placeholder="0" onChangeText={setPhotographicProduction}></TextInput>
           <Text>Fee agencia/producción:</Text>
-          <TextInput value={agencyFee} style={styles.input} placeholder="0" onChangeText={(value) => {calculateTotal(value)}}></TextInput>
+          <TextInput value={agencyFee} style={styles.input} placeholder="0" onChangeText={setAgencyFee}></TextInput>
           <Text>Total presupuesto:</Text>
           <TextInput value={totalBudget} editable={false} style={styles.input} placeholder="0" onChangeText={setTotalBudget}></TextInput>
         </View>

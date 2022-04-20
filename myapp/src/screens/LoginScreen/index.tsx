@@ -60,7 +60,7 @@ const LoginScreen: React.FC = () => {
           id: user.id,
           firstName: user.name,
           lastName: user.surname,
-          profile_picture_url: user.profile_picture_url,
+          profile_picture_url: user.profile_picture_url ? user.profile_picture_url : "",
           is_available: true,
           permission: user.permission,
           user: user.user,

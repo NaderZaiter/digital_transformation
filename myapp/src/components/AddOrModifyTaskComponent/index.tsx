@@ -7,7 +7,7 @@ import {
   Button,
   Picker
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import _ from "lodash";
@@ -127,14 +127,20 @@ const AddOrModifyTaskComponent = ({ navigation }) => {
     _.set(route, 'params.modifyTask.task', null);
   }
 
+  useEffect(() => {
+    setTaskTotalPrice((Number(taskDays) * Number(taskDayPrice)).toString())
+  }, [taskDays, taskDayPrice])
+
+
+
   return (
     <ScrollView>
       <View style={styles.container}>
         <View style={styles.container}>
             <Text>Descripción:</Text>
-            <TextInput style={styles.input} placeholder="Descripción" onChangeText={setTaskDescription}></TextInput>
+            <TextInput value={taskDescription} style={styles.input} placeholder="Descripción" onChangeText={setTaskDescription}></TextInput>
             <Text>Categoría:</Text>
-            <TextInput style={styles.input} placeholder="Categoría" onChangeText={setTaskCategory}></TextInput>
+            <TextInput value={taskCategory} style={styles.input} placeholder="Categoría" onChangeText={setTaskCategory}></TextInput>
             {/* <Picker ref={pickerRef} selectedValue={setTaskCategory}>
               <Picker.item label="Realización" value="Realización"></Picker.item>
               <Picker.item label="Estilismo" value="Estilismo"></Picker.item>
@@ -148,24 +154,24 @@ const AddOrModifyTaskComponent = ({ navigation }) => {
             <Text>Precio/unidad:</Text>
             <TextInput value={taskDayPrice} style={styles.input} placeholder="0" onChangeText={setTaskDayPrice}></TextInput>
             <Text>Precio total:</Text>
-            <TextInput editable={false} value={calculateTotalPrice()} style={styles.input} placeholder="0" onChangeText={setTaskTotalPrice}></TextInput>
+            <TextInput  value={taskTotalPrice} editable={false} style={styles.input} placeholder="0" onChangeText={setTaskTotalPrice}></TextInput>
             <Text>Coste:</Text>
             <TextInput value={taskCost} style={styles.input} placeholder="Coste" onChangeText={setTaskCost}></TextInput>
             <Text>Proveedor:</Text>
-            <TextInput style={styles.input} placeholder="Proveedor" onChangeText={setTaskSupplier}></TextInput>
+            <TextInput value={taskSupplier} style={styles.input} placeholder="Proveedor" onChangeText={setTaskSupplier}></TextInput>
             <Text>Número factura:</Text>
-            <TextInput style={styles.input} placeholder="Número factura" onChangeText={setTaskInvoiceNumber}></TextInput>
+            <TextInput value={taskInvoiceNumber} style={styles.input} placeholder="Número factura" onChangeText={setTaskInvoiceNumber}></TextInput>
             <Text>Fecha de vencimiento:</Text>
             <DatePicker value={taskExpirationDate} onChange={setTaskExpirationDate}
               style={{width: "100%"}}
               placeholder="Selecciona la fecha" format="yyyy-mm-dd"/>
             <Text>Forma de pago:</Text>
-            <TextInput style={styles.input} placeholder="Forma de pago" onChangeText={setTaskPaymentMethod}></TextInput>
+            <TextInput value={taskPaymentMethod} style={styles.input} placeholder="Forma de pago" onChangeText={setTaskPaymentMethod}></TextInput>
             <Text>Fecha de pago:</Text>
             <DatePicker value={taskPaymentDate} onChange={setTaskPaymentDate}
               style={{width: "100%"}}
               placeholder="Selecciona la fecha" format="yyyy-mm-dd"/>
-            <Button title="Agregar" color={colors.primary} onPress={addTask}/>
+            <Button title="Actualizar presupuesto" color={colors.primary} onPress={addTask}/>
         </View>
       </View>
     </ScrollView>
