@@ -24,7 +24,7 @@ const AddOrModifyTaskComponent = ({ navigation }) => {
   const [taskDays, setTaskDays] = useState("");
   const [taskDayPrice, setTaskDayPrice] = useState("");
   const [taskTotalPrice, setTaskTotalPrice] = useState("");
-  const [taskCost, setTaskCost] = useState("0");
+  const [taskCost, setTaskCost] = useState("");
   const [taskSupplier, setTaskSupplier] = useState("");
   const [taskInvoiceNumber, setTaskInvoiceNumber] = useState("");
   const [taskExpirationDate, setTaskExpirationDate] = useState(new Date());

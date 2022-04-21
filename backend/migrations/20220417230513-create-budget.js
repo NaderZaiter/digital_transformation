@@ -14,6 +14,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      status: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
       total_costs: {
         allowNull: true,
         type: Sequelize.STRING

@@ -29,7 +29,8 @@ const AddBudgetComponent = ({ navigation }) => {
   const [creationDate, setCreationDate] = useState(new Date());
   const [budgetNumber, setBudgetNumber] = useState("");
   const [budgetReference, setBudgetReference] = useState("");
-  const [clientName, setClientName] = useState("test");
+  const [budgetStatus, setBudgetStatus] = useState("");
+  const [clientName, setClientName] = useState("");
   const [clientCIF, setClientCIF] = useState("");
   const [clientStreet, setClientStreet] = useState("");
   const [clientStreetNumber, setClientStreetNumber] = useState("");
@@ -66,6 +67,7 @@ const AddBudgetComponent = ({ navigation }) => {
         creationDate: formatDate(creationDate).trim(),
         budgetNumber: budgetNumber.trim(),
         budgetReference: budgetReference.trim(),
+        budgetStatus: budgetStatus.trim(),
         clientName: clientName.trim(),
         clientCIF: clientCIF.trim(),
         clientStreet: clientStreet.trim(),
@@ -107,6 +109,7 @@ const AddBudgetComponent = ({ navigation }) => {
         creationDate: formatDate(creationDate).trim(),
         budgetNumber: budgetNumber.trim(),
         budgetReference: budgetReference.trim(),
+        budgetStatus: budgetStatus.trim(),
         clientName: clientName.trim(),
         clientCIF: clientCIF.trim(),
         clientStreet: clientStreet.trim(),
@@ -151,6 +154,8 @@ const AddBudgetComponent = ({ navigation }) => {
       notification.danger({message: 'El numero del presupuesto es obligatorio', useNativeToast: true, duration: 2000});
     }else if(!budgetReference){
       notification.danger({message: 'La referencia del presupuesto es obligatoria', useNativeToast: true, duration: 2000});
+    }else if(!budgetStatus){
+      notification.danger({message: 'El estado del presupuesto es obligatorio', useNativeToast: true, duration: 2000});
     }else if(!clientName){
       notification.danger({message: 'El nombre del cliente es obligatorio', useNativeToast: true, duration: 2000});
     }else if(!clientCIF){
@@ -188,11 +193,13 @@ const AddBudgetComponent = ({ navigation }) => {
 
   const getNewTask = () => {
     tasks.push(newTask);
+    calculateTotal();
     _.set(route, 'params.newTask', null);
   };
 
   const getModifiedTask = () => {
     tasks[modifiedTask.index] = modifiedTask.newTask;
+    calculateTotal();
     _.set(route, 'params.modifiedTask', null);
   };
 
@@ -223,6 +230,8 @@ const AddBudgetComponent = ({ navigation }) => {
       setClientCity(budgetInfo.client.city);
       setClientProvince(budgetInfo.client.province);
       setBudgetReference(budgetInfo.budget.id);
+      setBudgetStatus(budgetInfo.budget.status);
+      setBudgetStatus(budgetInfo.budget.status);
       setCreationDate(new Date(Number(budgetInfo.budget.creation_date.split('-')[0]), Number(budgetInfo.budget.creation_date.split('-')[1]) - 1,  Number(budgetInfo.budget.creation_date.split('-')[2])));
       setBudgetNumber(budgetInfo.budget.budget_number);
       setBudgetTotalCosts(budgetInfo.budget.total_costs);
@@ -294,6 +303,8 @@ const AddBudgetComponent = ({ navigation }) => {
           <TextInput editable={!(budgetInfo)} value={budgetNumber} style={styles.input} placeholder="Número presupuesto" onChangeText={setBudgetNumber}></TextInput>
           <Text>Referencia:</Text>
           <TextInput editable={!(budgetInfo)} value={budgetReference} style={styles.input} placeholder="Referencia presupuesto" onChangeText={setBudgetReference}></TextInput>
+          <Text>Estado:</Text>
+          <TextInput value={budgetStatus} style={styles.input} placeholder="Estado presupuesto" onChangeText={setBudgetStatus}></TextInput>
         </View>
         <View style={styles.container}>
           <Text>Acerca del cliente:</Text>

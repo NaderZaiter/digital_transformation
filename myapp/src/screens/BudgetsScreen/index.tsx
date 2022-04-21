@@ -1,57 +1,34 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, View, StyleSheet, Button, TouchableOpacity, Image } from "react-native";
+import { Text, View, StyleSheet, Button, TouchableOpacity, Image, Pressable } from "react-native";
 import { colors } from "../../constants/palette";
 import { TextInput } from "react-native-gesture-handler";
 import notification from "../../helpers/toast";
 import { petitions } from "../../constants/petitions";
 import { store } from "../../redux/store";
 import { updateBudget } from "../../redux/slices/budgetSlice";
+import { useSelector } from "react-redux";
+
 const BudgetsScreen = ({ navigation }) => {
+  const user = useSelector((state) => state?.user);
   const [budgetReference, setBudgetReference] = useState("");
   const [budgets, setBudgets] = useState([]);
+  const [clientCIF, setClientCIF] = useState("");
 
-  const getReminders = () => {
-
-  }
-  
-
-  useEffect(() => {
-    getReminders();
-  }, []);
 
   const navigateAddBudgetScreen= () => {
     navigation.navigate("AddBudgetScreen");
   };
 
-  const navigateModifyBudgetScreen = () => {
-    navigation.navigate("ModifyBudgetScreen");
-  };
-
-  const pickerRef = useRef();
-
-  function open() {
-    pickerRef.current.focus();
-  }
-  function close() {
-    pickerRef.current.blur();
-  }
-
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {
     setRefreshing(true);
-    getReminders();
     setRefreshing(false);
   };
   
-  const getBudgets = async() => {
+  const getBudgetsById = async() => {
+    setClientCIF("");
     if(budgetReference){
-      if(await searchBudget()){
-        if(budgets.length === 0){
-          notification.success({message: `Se ha encontrado ${budgets.length + 1} resultado`, useNativeToast: true, duration: 2000});
-        }else{
-          notification.success({message: `Se han encontrado ${budgets.length + 1} resultados`, useNativeToast: true, duration: 2000});
-        }
-      }else{
+      if(!await searchBudgetsByID()){
         notification.danger({message: 'El presupuesto no existe', useNativeToast: true, duration: 2000});
       }
     }else{
@@ -59,9 +36,9 @@ const BudgetsScreen = ({ navigation }) => {
     }
   };
 
-  const searchBudget = async() => {
+  const searchBudgetsByID = async() => {
     let result = false;
-    await fetch(petitions.get_budget_local, {
+    await fetch(petitions.get_budgets_by_id_local, {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -187,29 +164,188 @@ const BudgetsScreen = ({ navigation }) => {
     navigation.navigate("AddBudgetScreen", {budgetInfo: {budget: budget, client: client, tasks: tasks}});
   }
 
+  const getBudgetsByCIF = async() => {
+    setBudgetReference("");
+    if(clientCIF){
+      if(!await searchBudgetsByCIF()){
+        notification.danger({message: 'No se ha encontrado ningún presupuesto', useNativeToast: true, duration: 2000});
+      }
+    }else{
+      notification.danger({message: 'El CIF del cliente es obligatorio', useNativeToast: true, duration: 2000});
+    }
+  };
+
+  const searchBudgetsByCIF = async() => {
+    let result = false;
+    await fetch(petitions.get_budgets_by_cif_local, {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }),
+      body: JSON.stringify({
+        clientCIF: clientCIF
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if(responseJson.code === 200) {
+          setBudgets(responseJson.budgets)
+          result = true;
+        }else{
+          setBudgets([]);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setBudgets([]);
+      });
+      return result;
+  }
+
+  const getBudgetsByStatus = async(category) => {
+    setBudgetReference("");
+    setClientCIF("");
+    if(!await searchBudgetsByStatus(category)){
+      notification.danger({message: 'No se ha encontrado ningún presupuesto', useNativeToast: true, duration: 2000});
+    }
+  };
+
+  const searchBudgetsByStatus = async(status) => {
+    let result = false;
+    await fetch(petitions.get_budgets_by_status_local, {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }),
+      body: JSON.stringify({
+        status: status
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if(responseJson.code === 200) {
+          setBudgets(responseJson.budgets)
+          result = true;
+        }else{
+          setBudgets([]);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setBudgets([]);
+      });
+      return result;
+  }
+
+  const searchBudgets = async() => {
+    let result = false;
+    await fetch(petitions.get_all_budgets_local, {
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if(responseJson.code === 200) {
+          setBudgets(responseJson.budgets)
+          result = true;
+        }else{
+          setBudgets([]);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setBudgets([]);
+      });
+      return result;
+  }
+
+  const getAllBudgets = async() => {
+    setBudgetReference("");
+    setClientCIF("");
+    if(!await searchBudgets()){
+      notification.danger({message: 'No se ha encontrado ningún presupuesto', useNativeToast: true, duration: 2000});
+    }
+  }
+
+  const getMyBudgets = async() => {
+    setBudgetReference("");
+    setClientCIF("");
+    if(!await searchMyBudgets()){
+      notification.danger({message: 'No se ha encontrado ningún presupuesto', useNativeToast: true, duration: 2000});
+    }
+  }
+
+  const searchMyBudgets = async() => {
+    let result = false;
+    await fetch(petitions.get_user_budgets_local, {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }),
+      body: JSON.stringify({
+        user: user.userProfile.user
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if(responseJson.code === 200) {
+          setBudgets(responseJson.budgets)
+          result = true;
+        }else{
+          setBudgets([]);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setBudgets([]);
+      });
+      return result;
+  }
+
+
   useEffect(() => {
-    console.log(budgets)
+    if(budgets[0]){
+      if(budgets.length === 1){
+        notification.success({message: `Se ha encontrado ${budgets.length} presupuesto`, useNativeToast: true, duration: 2000});
+      }else{
+        notification.success({message: `Se han encontrado ${budgets.length} presupuestos`, useNativeToast: true, duration: 2000});
+      }
+    }
   }, [budgets])
 
   return (
     <View>
       <View>
-        <Text>Busca el presupuesto que quieres modificar:</Text>
-        <TextInput style={styles.input} placeholder="Referencia presupuesto" onChangeText={setBudgetReference}></TextInput>
-            <Button title="Consultar" color={colors.black} onPress={() => {getBudgets()}} />
+        <Text>Consultar un presupuesto:</Text>
+        <TextInput value={budgetReference} style={styles.input} placeholder="Referencia presupuesto" onChangeText={setBudgetReference}></TextInput>
+        <Button title="Consultar" color={colors.black} onPress={() => {getBudgetsById()}} />
       </View>
       <View>
         <Text>Consultar los presupuestos de un cliente:</Text>
-        <TextInput style={styles.input} placeholder="CIF cliente"></TextInput>
+        <TextInput value={clientCIF} style={styles.input} placeholder="CIF cliente" onChangeText={(cif) => {setClientCIF(cif)}}></TextInput>
+        <Button title="Consultar" color={colors.black} onPress={() => {getBudgetsByCIF()}} />
       </View>
       <View>
         <Text>Consultar los presupuestos por categoría:</Text>
-        <Button title="Terminados" color={colors.primary} onPress={() => { }} />
-        <Button title="En curso" color={colors.primary} onPress={() => { }} />
-        <Button title="Pendientes" color={colors.primary} onPress={() => { }} />
-        <Button title="Bloqueados" color={colors.primary} onPress={() => { }} />
-        <Button title="Desestimados" color={colors.primary} onPress={() => { }} />
-        <Button title="Todos" color={colors.primary} onPress={() => { }} />
+        <View style={styles.buttonRowView}>
+          <Button title="Todos" color={colors.salmon} onPress={()=>{getAllBudgets()}} />
+          <Button title="Terminados" color={colors.salmon} onPress={()=>{getBudgetsByStatus('Terminado')}} />
+          <Button title="En curso" color={colors.salmon} onPress={()=>{getBudgetsByStatus('En curso')}} />
+        </View>
+        <View style={styles.buttonRowView}>
+          <Button title="Pendientes" color={colors.salmon} onPress={()=>{getBudgetsByStatus('Pendiente')}} />
+          <Button title="Desestimados" color={colors.salmon} onPress={()=>{getBudgetsByStatus('Desestimado')}} />
+          <Button title="Bloqueados" color={colors.salmon} onPress={()=>{getBudgetsByStatus('Bloqueado')}} />
+        </View>
+      </View>
+      <View>
+        <Button title="Consultar mis presupuestos" color={colors.black} onPress={() => {getMyBudgets()}} />
       </View>
       <View>
       {budgets.map((budget, index) => {
@@ -231,7 +367,7 @@ const BudgetsScreen = ({ navigation }) => {
       </View>
       <View>
         <TouchableOpacity style={styles.container} onPress={navigateAddBudgetScreen}>
-          <View style={styles.button}>
+          <View style={styles.addButton}>
           <Image
             source={require("../../../assets/budget-icon.png")}
             resizeMode='contain'
@@ -245,24 +381,21 @@ const BudgetsScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  buttonRowView:{
+    display: 'flex',
+    padding: '5px',
+  },
   input: {
     height: 40,
     padding: 10,
     backgroundColor: colors.background,
-  },
-  registerBtnContainer: {
-    marginTop: "6%",
-    flexDirection: "row",
-  },
-  signinrBtn: {
-    fontSize: 16,
   },
   container: {
     marginLeft: 250,
     position: 'absolute',
     zIndex: 2
   },
-  button: {
+  addButton: {
     backgroundColor: colors.primary,
     width: 60,
     height: 60,

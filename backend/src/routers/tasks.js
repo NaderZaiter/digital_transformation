@@ -25,11 +25,11 @@ router.post('/login', checkAuthMiddleware.checkAuth, controller.login);
  router.put('/addBudget', checkAuthMiddleware.checkAuth, controller.addBudget);
  /**
  * @swagger
- * /addBudget
+ * /getBudgetsByID
  *  post:
  *  summary: Search budget from DDBB
  */
- router.post('/getBudget', checkAuthMiddleware.checkAuth, controller.getBudget);
+ router.post('/getBudgetsByID', checkAuthMiddleware.checkAuth, controller.getBudgetsByID);
  /**
  * @swagger
  * /deleteBudget
@@ -58,4 +58,32 @@ router.post('/login', checkAuthMiddleware.checkAuth, controller.login);
  *  summary: Modify budget from DDBB
  */
  router.put('/modifyBudget', checkAuthMiddleware.checkAuth, controller.modifyBudget);
+/**
+ * @swagger
+ * /getBudgetsByCIF
+ *  post:
+ *  summary: Search client's budgets from DDBB
+ */
+   router.post('/getBudgetsByCIF', checkAuthMiddleware.checkAuth, controller.getBudgetsByCIF);
+/**
+ * @swagger
+ * /getBudgetsByStatus
+ *  post:
+ *  summary: Search budgets by status from DDBB
+ */
+  router.post('/getBudgetsByStatus', checkAuthMiddleware.checkAuth, controller.getBudgetsByStatus);
+/**
+ * @swagger
+ * /getAllBudgets
+ *  get:
+ *  summary: Search all budgets
+ */
+  router.get('/getAllBudgets', checkAuthMiddleware.checkAuth, controller.getAllBudgets);
+/**
+ * @swagger
+ * /getAllBudgets
+ *  post:
+ *  summary: Search user budgets
+ */
+  router.post('/getUserBudgets', checkAuthMiddleware.checkAuth, controller.getUserBudgets);
 export default router;

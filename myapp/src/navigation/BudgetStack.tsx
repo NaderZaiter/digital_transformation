@@ -4,7 +4,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { colors } from "../constants/palette";
 import BudgetsScreen from "../screens/BudgetsScreen";
 import AddBudgetScreen from "../screens/AddBudgetScreen";
-import ModifyBudgetScreen from "../screens/ModifyBudgetScreen";
 import AddOrModifyTaskScreen from "../screens/AddOrModifyTaskScreen";
 
 export function BudgetStack() {
@@ -40,15 +39,6 @@ export function BudgetStack() {
         component={AddOrModifyTaskScreen}
         options={{
           title: "Agregar/modificar tarea",
-          headerTintColor: colors.white,
-          headerStyle: {
-            backgroundColor: colors.primary
-          }
-        }} />
-        <RootStackNav.Screen name="ModifyBudgetScreen"
-        component={ModifyBudgetScreen}
-        options={{
-          title: "Modificar/eliminar presupuesto",
           headerTintColor: colors.white,
           headerStyle: {
             backgroundColor: colors.primary
