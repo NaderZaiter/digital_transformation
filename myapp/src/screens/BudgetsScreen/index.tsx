@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 
 const BudgetsScreen = ({ navigation }) => {
   const user = useSelector((state) => state?.user);
+  const budgetInfo = useSelector((state) => state?.budget).budgetInfo;
   const [budgetReference, setBudgetReference] = useState("");
   const [budgets, setBudgets] = useState([]);
   const [clientCIF, setClientCIF] = useState("");
@@ -149,19 +150,46 @@ const BudgetsScreen = ({ navigation }) => {
       return result;
   }
 
+  const getBudgetImagesRights = async(budget) => {
+    let result = null;
+    await fetch(petitions.get_budget_images_rights, {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }),
+      body: JSON.stringify({
+        idBudget: budget.id,
+        budgetNumber: budget.budget_number
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if(responseJson.code === 200) { 
+          result = responseJson.imagesRights;
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+      return result;
+  }
+
   const editBudget = async(budget) => {
     const client = await getBudgetClient(budget);
     const tasks = await getBudgetTasks(budget);
+    const imagesRights = await getBudgetImagesRights(budget);
     store.dispatch(
       updateBudget({
         budgetInfo: {
           budget: budget,
           client: client,
-          tasks: tasks
+          tasks: tasks,
+          imagesRights: imagesRights
         },
       })
     );
-    navigation.navigate("AddBudgetScreen", {budgetInfo: {budget: budget, client: client, tasks: tasks}});
+    navigation.navigate("AddBudgetScreen");
   }
 
   const getBudgetsByCIF = async() => {
@@ -317,7 +345,13 @@ const BudgetsScreen = ({ navigation }) => {
         notification.success({message: `Se han encontrado ${budgets.length} presupuestos`, useNativeToast: true, duration: 2000});
       }
     }
-  }, [budgets])
+  }, [budgets]);
+
+  useEffect(() => {
+    if(budgetInfo === undefined){
+      setBudgets([])
+    }
+  }, [budgetInfo])
 
   return (
     <View>
@@ -334,14 +368,14 @@ const BudgetsScreen = ({ navigation }) => {
       <View>
         <Text>Consultar los presupuestos por categoría:</Text>
         <View style={styles.buttonRowView}>
-          <Button title="Todos" color={colors.salmon} onPress={()=>{getAllBudgets()}} />
-          <Button title="Terminados" color={colors.salmon} onPress={()=>{getBudgetsByStatus('Terminado')}} />
-          <Button title="En curso" color={colors.salmon} onPress={()=>{getBudgetsByStatus('En curso')}} />
+          <Button title="Todos" color={colors.primary} onPress={()=>{getAllBudgets()}} />
+          <Button title="Terminados" color={colors.primary} onPress={()=>{getBudgetsByStatus('Terminado')}} />
+          <Button title="En curso" color={colors.primary} onPress={()=>{getBudgetsByStatus('En curso')}} />
         </View>
         <View style={styles.buttonRowView}>
-          <Button title="Pendientes" color={colors.salmon} onPress={()=>{getBudgetsByStatus('Pendiente')}} />
-          <Button title="Desestimados" color={colors.salmon} onPress={()=>{getBudgetsByStatus('Desestimado')}} />
-          <Button title="Bloqueados" color={colors.salmon} onPress={()=>{getBudgetsByStatus('Bloqueado')}} />
+          <Button title="Pendientes" color={colors.primary} onPress={()=>{getBudgetsByStatus('Pendiente')}} />
+          <Button title="Desestimados" color={colors.primary} onPress={()=>{getBudgetsByStatus('Desestimado')}} />
+          <Button title="Bloqueados" color={colors.primary} onPress={()=>{getBudgetsByStatus('Bloqueado')}} />
         </View>
       </View>
       <View>

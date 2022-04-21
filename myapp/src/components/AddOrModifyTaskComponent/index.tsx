@@ -82,14 +82,6 @@ const AddOrModifyTaskComponent = ({ navigation }) => {
     }
   }
 
-  const formatDate = (date: Date) :string => {
-    let result = "";
-    if(date){
-      result = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-    }
-    return result;
-  }
-
   const setTaskValues = (task) => {
       setTaskDescription(task.taskDescription);
       setTaskCategory(task.taskCategory);

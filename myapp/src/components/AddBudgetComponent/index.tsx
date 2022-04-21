@@ -19,13 +19,15 @@ import { useRoute } from "@react-navigation/native";
 import {DatePicker} from '@material-ui/pickers'
 import notification from "../../helpers/toast";
 import { petitions } from "../../constants/petitions";
+import { store } from "../../redux/store";
+import { updateBudget } from "../../redux/slices/budgetSlice";
 
 const AddBudgetComponent = ({ navigation }) => {
   const user = useSelector((state) => state?.user);
   const budgetInfo = useSelector((state) => state?.budget).budgetInfo;
-  const pickerRef = useRef();
   const [notes, setNotes] = useState(budgetNotes);
   const [tasks, setTasks] = useState([]);
+  const [imagesRights, setImagesRight] = useState([]);
   const [creationDate, setCreationDate] = useState(new Date());
   const [budgetNumber, setBudgetNumber] = useState("");
   const [budgetReference, setBudgetReference] = useState("");
@@ -45,15 +47,6 @@ const AddBudgetComponent = ({ navigation }) => {
   const [budgetIBAN, setBudgetIBAN] = useState("ES17 0075 8582 3206 0008 1212");
   const [budgetUser, setBudgetUser] = useState(user.userProfile.user);
   const [buttonText, setButtonText] = useState("Agregar presupuesto");
-
-  const [state, setState] = useState({screenHeight: 0});
-
-  function open() {
-    pickerRef.current.focus();
-  }
-  function close() {
-    pickerRef.current.blur();
-  }
 
   const addBudgetToDDBB = async () => {
     let result = false;
@@ -76,6 +69,7 @@ const AddBudgetComponent = ({ navigation }) => {
         clientCity: clientCity.trim(),
         clientProvince: clientProvince.trim(),
         tasks: setCorrectTasks(tasks),
+        imagesRights: setCorrectImagesRights(imagesRights),
         budgetTotalCosts: budgetTotalCosts.trim(),
         photographicProduction: photographicProduction.trim(),
         agencyFee: agencyFee.trim(),
@@ -118,6 +112,7 @@ const AddBudgetComponent = ({ navigation }) => {
         clientCity: clientCity.trim(),
         clientProvince: clientProvince.trim(),
         tasks: setCorrectTasks(tasks),
+        imagesRights: setCorrectImagesRights(imagesRights),
         budgetTotalCosts: budgetTotalCosts.trim(),
         photographicProduction: photographicProduction.trim(),
         agencyFee: agencyFee.trim(),
@@ -147,6 +142,14 @@ const AddBudgetComponent = ({ navigation }) => {
     return tasks;
   }
 
+  const setCorrectImagesRights = (imagesRights) => {
+    imagesRights.forEach((imageRights) => () => {
+      imageRights.campaignStartDate = formatDate(imageRights.campaignStartDate);
+      imageRights.campaignEndDate = formatDate(imageRights.campaignEndDate);
+    })
+    return imagesRights;
+  }
+
   const addBudget = async() => {
     if(!creationDate){
       notification.danger({message: 'La fecha de creación es obligatoria', useNativeToast: true, duration: 2000});
@@ -164,13 +167,15 @@ const AddBudgetComponent = ({ navigation }) => {
       if(budgetInfo){
         if(await modifyBudgetFromDDBB()){
           notification.success({message: 'Presupuesto modificado correctamente', useNativeToast: true, duration: 2000});
-          navigation.goBack();
         }else{
           notification.danger({message: 'No se ha podido modificar el presupuesto', useNativeToast: true, duration: 2000});
         }
+        store.dispatch(updateBudget({budgetInfo: undefined}));
+        navigation.goBack();
       }else{
         if(await addBudgetToDDBB()){
           notification.success({message: 'Presupuesto agregado correctamente', useNativeToast: true, duration: 2000});
+          store.dispatch(updateBudget({budgetInfo: undefined}));
           navigation.goBack();
         }else{
           notification.danger({message: 'El presupuesto ya existe', useNativeToast: true, duration: 2000});
@@ -191,6 +196,10 @@ const AddBudgetComponent = ({ navigation }) => {
     navigation.navigate("AddOrModifyTaskScreen", params);
   };
 
+  const navigateAddOrModifyImageRightsScreen= (params) => {
+    navigation.navigate("AddOrModifyImageRightsScreen", params);
+  };
+
   const getNewTask = () => {
     tasks.push(newTask);
     calculateTotal();
@@ -201,6 +210,18 @@ const AddBudgetComponent = ({ navigation }) => {
     tasks[modifiedTask.index] = modifiedTask.newTask;
     calculateTotal();
     _.set(route, 'params.modifiedTask', null);
+  };
+
+  const getNewImageRights = () => {
+    imagesRights.push(newImageRights);
+    calculateTotal();
+    _.set(route, 'params.newImageRights', null);
+  };
+
+  const getModifiedImageRights = () => {
+    imagesRights[modifiedImageRights.index] = modifiedImageRights.newImageRights;
+    calculateTotal();
+    _.set(route, 'params.modifiedImageRights', null);
   };
 
   const getBudgetInfo = () => {
@@ -222,6 +243,21 @@ const AddBudgetComponent = ({ navigation }) => {
           });
         }
       }
+      if(budgetInfo.imagesRights){
+        for(let imageRights of budgetInfo.imagesRights){
+          imagesRights.push({
+            agencyName: imageRights.agency_name,
+            modelName: imageRights.model_name,
+            campaign: imageRights.campaign,
+            rightsDuration: imageRights.rights_duration,
+            campaignStartDate: new Date(imageRights.campaign_start_date),
+            campaignEndDate: new Date(imageRights.campaign_end_date),
+            invoiceNumber: imageRights.invoice_number,
+            rightsAmount: imageRights.rights_amount,
+            rightsRenewalAmount: imageRights.rights_renewal_amount,
+          });
+        }
+      }
       setClientName(budgetInfo.client.name);
       setClientCIF(budgetInfo.client.cif);
       setClientStreet(budgetInfo.client.street);
@@ -230,7 +266,6 @@ const AddBudgetComponent = ({ navigation }) => {
       setClientCity(budgetInfo.client.city);
       setClientProvince(budgetInfo.client.province);
       setBudgetReference(budgetInfo.budget.id);
-      setBudgetStatus(budgetInfo.budget.status);
       setBudgetStatus(budgetInfo.budget.status);
       setCreationDate(new Date(Number(budgetInfo.budget.creation_date.split('-')[0]), Number(budgetInfo.budget.creation_date.split('-')[1]) - 1,  Number(budgetInfo.budget.creation_date.split('-')[2])));
       setBudgetNumber(budgetInfo.budget.budget_number);
@@ -266,14 +301,24 @@ const AddBudgetComponent = ({ navigation }) => {
   const route = useRoute()
   const newTask = _.get(route, 'params.newTask');
   const modifiedTask = _.get(route, 'params.modifiedTask');
+  const newImageRights = _.get(route, 'params.newImageRights');
+  const modifiedImageRights = _.get(route, 'params.modifiedImageRights');
   if(newTask){
     getNewTask();
   }else if(modifiedTask){
     getModifiedTask();
+  }else if(newImageRights){
+    getNewImageRights();
+  }else if(modifiedImageRights){
+    getModifiedImageRights();
   }
 
   const deleteTask = (index) => {
     setTasks(tasks.filter((task, indexTask) => indexTask !== index));
+  };
+
+  const deleteImageRights = (index) => {
+    setTasks(imagesRights.filter((imageRights, indexImageRights) => indexImageRights !== index));
   };
   
   useEffect(() => {
@@ -335,6 +380,21 @@ const AddBudgetComponent = ({ navigation }) => {
                 <Text>{task.taskCategory}
                   <Button title="Editar" color={colors.black} onPress={() => {navigateAddOrModifyTaskScreen({modifyTask: {index: indexTask, task: task}})}}/>
                   <Button title="Borrar" color={colors.red} onPress={() => {deleteTask(indexTask)}} />
+                </Text>
+              </Text>
+            </View>
+            )
+          })}
+        </View>
+        <View style={styles.container}>
+          <Text>Acerca de los derechos imágen:<Button title="+" color={colors.black} onPress={() => {navigateAddOrModifyImageRightsScreen(null)}} /></Text>
+          {imagesRights.map((imageRights, indexImageRights) => {
+            return (
+            <View key={indexImageRights}>
+              <Text>{imageRights.agencyName}
+                <Text>{imageRights.modelName}
+                  <Button title="Editar" color={colors.black} onPress={() => {navigateAddOrModifyImageRightsScreen({modifyImageRights: {index: indexImageRights, imageRights: imageRights}})}}/>
+                  <Button title="Borrar" color={colors.red} onPress={() => {deleteImageRights(indexImageRights)}} />
                 </Text>
               </Text>
             </View>

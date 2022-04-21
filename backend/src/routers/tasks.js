@@ -81,9 +81,44 @@ router.post('/login', checkAuthMiddleware.checkAuth, controller.login);
   router.get('/getAllBudgets', checkAuthMiddleware.checkAuth, controller.getAllBudgets);
 /**
  * @swagger
- * /getAllBudgets
+ * /getUserBudgets
  *  post:
  *  summary: Search user budgets
  */
   router.post('/getUserBudgets', checkAuthMiddleware.checkAuth, controller.getUserBudgets);
+/**
+ * @swagger
+ * /getBudgetImagesRights
+ *  post:
+ *  summary: Gets budget's images rights
+ */
+  router.post('/getBudgetImagesRights', checkAuthMiddleware.checkAuth, controller.getBudgetImagesRights);
+/**
+ * @swagger
+ * /updateImageRights
+ *  post:
+ *  summary: Updates image rights
+ */
+ router.post('/updateImageRights', checkAuthMiddleware.checkAuth, controller.updateImageRights);
+/**
+ * @swagger
+ * /deleteImageRights
+ *  post:
+ *  summary: Delete image rights
+ */
+ router.post('/deleteImageRights', checkAuthMiddleware.checkAuth, controller.deleteImageRights);
+ /**
+ * @swagger
+ * /getClientImagesRights
+ *  post:
+ *  summary: Gets client's images rights
+ */
+  router.post('/getClientImagesRights', checkAuthMiddleware.checkAuth, controller.getClientImagesRights);
+/**
+ * @swagger
+ * /getInvoiceImagesRights
+ *  post:
+ *  summary: Gets invoice's images rights
+ */
+  router.post('/getInvoiceImagesRights', checkAuthMiddleware.checkAuth, controller.getInvoiceImagesRights);
 export default router;

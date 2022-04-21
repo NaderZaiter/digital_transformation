@@ -4,7 +4,8 @@ export interface Budget {
     budgetInfo?: {
         budget?: any,
         client?: any,
-        tasks?: any
+        tasks?: any,
+        imagesRights?: any
     }
 }
 

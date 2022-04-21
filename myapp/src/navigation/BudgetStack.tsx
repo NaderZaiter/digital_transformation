@@ -5,6 +5,7 @@ import { colors } from "../constants/palette";
 import BudgetsScreen from "../screens/BudgetsScreen";
 import AddBudgetScreen from "../screens/AddBudgetScreen";
 import AddOrModifyTaskScreen from "../screens/AddOrModifyTaskScreen";
+import AddOrModifyImageRightsScreen from "../screens/AddOrModifyImageRightsScreen";
 
 export function BudgetStack() {
   const RootStackNav = createStackNavigator();
@@ -39,6 +40,15 @@ export function BudgetStack() {
         component={AddOrModifyTaskScreen}
         options={{
           title: "Agregar/modificar tarea",
+          headerTintColor: colors.white,
+          headerStyle: {
+            backgroundColor: colors.primary
+          }
+        }} />
+        <RootStackNav.Screen name="AddOrModifyImageRightsScreen"
+        component={AddOrModifyImageRightsScreen}
+        options={{
+          title: "Agregar/modificar derechos imágen",
           headerTintColor: colors.white,
           headerStyle: {
             backgroundColor: colors.primary
