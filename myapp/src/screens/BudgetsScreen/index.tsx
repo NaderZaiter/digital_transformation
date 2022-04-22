@@ -152,7 +152,7 @@ const BudgetsScreen = ({ navigation }) => {
 
   const getBudgetImagesRights = async(budget) => {
     let result = null;
-    await fetch(petitions.get_budget_images_rights, {
+    await fetch(petitions.get_budget_images_rights_local, {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -369,13 +369,13 @@ const BudgetsScreen = ({ navigation }) => {
         <Text>Consultar los presupuestos por categoría:</Text>
         <View style={styles.buttonRowView}>
           <Button title="Todos" color={colors.primary} onPress={()=>{getAllBudgets()}} />
-          <Button title="Terminados" color={colors.primary} onPress={()=>{getBudgetsByStatus('Terminado')}} />
-          <Button title="En curso" color={colors.primary} onPress={()=>{getBudgetsByStatus('En curso')}} />
+          <Button title="Terminados" color={colors.primary} onPress={()=>{getBudgetsByStatus('finished')}} />
+          <Button title="En curso" color={colors.primary} onPress={()=>{getBudgetsByStatus('in progress')}} />
         </View>
         <View style={styles.buttonRowView}>
-          <Button title="Pendientes" color={colors.primary} onPress={()=>{getBudgetsByStatus('Pendiente')}} />
-          <Button title="Desestimados" color={colors.primary} onPress={()=>{getBudgetsByStatus('Desestimado')}} />
-          <Button title="Bloqueados" color={colors.primary} onPress={()=>{getBudgetsByStatus('Bloqueado')}} />
+          <Button title="Pendientes" color={colors.primary} onPress={()=>{getBudgetsByStatus('pending')}} />
+          <Button title="Desestimados" color={colors.primary} onPress={()=>{getBudgetsByStatus('dismissed')}} />
+          <Button title="Bloqueados" color={colors.primary} onPress={()=>{getBudgetsByStatus('blocked')}} />
         </View>
       </View>
       <View>

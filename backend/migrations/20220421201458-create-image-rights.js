@@ -17,6 +17,9 @@ module.exports = {
       client_cif: {
         type: Sequelize.STRING
       },
+      status: {
+        type: Sequelize.STRING
+      },
       agency_name: {
         type: Sequelize.STRING
       },

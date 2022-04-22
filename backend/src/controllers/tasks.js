@@ -65,8 +65,8 @@ export const addBudget = async(req, res) => {
             [task.taskDescription, task.taskCategory, task.taskDays, task.taskDayPrice, task.taskTotalPrice, task.taskCost, task.taskSupplier, task.taskInvoiceNumber, task.taskExpirationDate, task.taskPaymentMethod, task.taskPaymentDate, req.body.budgetReference, req.body.budgetNumber]);
         }
         for (let imageRights of req.body.imagesRights){
-            await connection.query("INSERT INTO imagerights (id_budget, budget_number, client_cif, agency_name, model_name, campaign, rights_duration, campaign_start_date, campaign_end_date, invoice_number, rights_amount, rights_renewal_amount) values (?,?,?,?,?,?,?,?,?,?,?,?)",
-            [req.body.budgetReference, req.body.budgetNumber,  req.body.clientCIF, imageRights.agencyName, imageRights.modelName, imageRights.campaign, imageRights.rightsDuration, imageRights.campaignStartDate, imageRights.campaignEndDate, imageRights.invoiceNumber, imageRights.rightsAmount, imageRights.rightsRenewalAmount]);
+            await connection.query("INSERT INTO imagerights (id_budget, budget_number, client_cif, status, agency_name, model_name, campaign, rights_duration, campaign_start_date, campaign_end_date, invoice_number, rights_amount, rights_renewal_amount) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            [req.body.budgetReference, req.body.budgetNumber,  req.body.clientCIF, imageRights.status, imageRights.agencyName, imageRights.modelName, imageRights.campaign, imageRights.rightsDuration, imageRights.campaignStartDate, imageRights.campaignEndDate, imageRights.invoiceNumber, imageRights.rightsAmount, imageRights.rightsRenewalAmount]);
         }
         res.status(200).json({
             code: 200,
@@ -176,8 +176,8 @@ export const modifyBudget = async(req, res) => {
         }
         await connection.query("DELETE FROM imagerights WHERE id_budget = ? AND budget_number = ?", [req.body.budgetReference, req.body.budgetNumber]);
         for (let imageRights of req.body.imagesRights){
-            await connection.query("INSERT INTO imagerights (id_budget, budget_number, client_cif, agency_name, model_name, campaign, rights_duration, campaign_start_date, campaign_end_date, invoice_number, rights_amount, rights_renewal_amount) values (?,?,?,?,?,?,?,?,?,?,?,?)",
-            [req.body.budgetReference, req.body.budgetNumber, req.body.clientCIF, imageRights.agencyName, imageRights.modelName, imageRights.campaign, imageRights.rightsDuration, imageRights.campaignStartDate, imageRights.campaignEndDate, imageRights.invoiceNumber, imageRights.rightsAmount, imageRights.rightsRenewalAmount]);
+            await connection.query("INSERT INTO imagerights (id_budget, budget_number, client_cif, status, agency_name, model_name, campaign, rights_duration, campaign_start_date, campaign_end_date, invoice_number, rights_amount, rights_renewal_amount) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            [req.body.budgetReference, req.body.budgetNumber, req.body.clientCIF, imageRights.status, imageRights.agencyName, imageRights.modelName, imageRights.campaign, imageRights.rightsDuration, imageRights.campaignStartDate, imageRights.campaignEndDate, imageRights.invoiceNumber, imageRights.rightsAmount, imageRights.rightsRenewalAmount]);
         }
         res.status(200).json({
             code: 200,
@@ -270,8 +270,8 @@ export const getUserBudgets = async(req, res) => {
 
 export const updateImageRights = async(req, res) => {
     const connection = await connect();
-    await connection.query("UPDATE imagerights SET agency_name=?, model_name=?, campaign=?, rights_duration=?, campaign_start_date=?, campaign_end_date=?, invoice_number=?, rights_amount=?, rights_renewal_amount=? WHERE id=?",
-    [req.body.imageRights.agencyName, req.body.imageRights.modelName, req.body.imageRights.campaign, req.body.imageRights.rightsDuration, req.body.imageRights.campaignStartDate, req.body.imageRights.campaignEndDate, req.body.imageRights.invoiceNumber, req.body.imageRights.rightsAmount, req.body.imageRights.rightsRenewalAmount, req.body.imageRights.id]);
+    await connection.query("UPDATE imagerights SET status=?, agency_name=?, model_name=?, campaign=?, rights_duration=?, campaign_start_date=?, campaign_end_date=?, invoice_number=?, rights_amount=?, rights_renewal_amount=? WHERE id=?",
+    [req.body.imageRights.status, req.body.imageRights.agencyName, req.body.imageRights.modelName, req.body.imageRights.campaign, req.body.imageRights.rightsDuration, req.body.imageRights.campaignStartDate, req.body.imageRights.campaignEndDate, req.body.imageRights.invoiceNumber, req.body.imageRights.rightsAmount, req.body.imageRights.rightsRenewalAmount, req.body.imageRights.id]);
     res.status(200).json({
         code: 200
     });
@@ -318,4 +318,45 @@ export const getInvoiceImagesRights = async(req, res) => {
             code: 404
         });
     }
+}
+
+export const getAllImagesRights = async(req, res) => {
+    const connection = await connect();
+    const [rows] = await connection.query("SELECT * FROM imagerights",[]);
+    if(rows[0]){
+        res.status(200).json({
+            imagesRights: rows,
+            code: 200
+        });
+    }else{
+        res.status(404).json({
+            imagesRights: null,
+            code: 404
+        });
+    }
+}
+
+export const getImagesRightsByStatus = async(req, res) => {
+    const connection = await connect();
+    const [rows] = await connection.query("SELECT * FROM imagerights WHERE status=?",[req.body.status]);
+    if(rows[0]){
+        res.status(200).json({
+            imagesRights: rows,
+            code: 200
+        });
+    }else{
+        res.status(404).json({
+            imagesRights: null,
+            code: 404
+        });
+    }
+}
+
+export const updateUser = async(req, res) => {
+    const connection = await connect();
+    await connection.query("UPDATE users SET name=?, surname=?, password=?, profile_picture_url=? WHERE user=?",
+    [req.body.firstName, req.body.lastName, req.body.password, req.body.profilePictureURL, req.body.user]);
+    res.status(200).json({
+        code: 200
+    });
 }

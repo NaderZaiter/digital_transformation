@@ -11,11 +11,14 @@ export const petitions = {
     get_budgets_by_status_local: "http://localhost:3000/getBudgetsByStatus",
     get_all_budgets_local: "http://localhost:3000/getAllBudgets",
     get_user_budgets_local: "http://localhost:3000/getUserBudgets",
-    get_budget_images_rights: "http://localhost:3000/getBudgetImagesRights",
-    update_image_rights: "http://localhost:3000/updateImageRights",
-    delete_image_rights: "http://localhost:3000/deleteImageRights",
-    get_client_images_rights: "http://localhost:3000/getClientImagesRights",
-    get_invoice_images_rights: "http://localhost:3000/getInvoiceImagesRights",
+    get_budget_images_rights_local: "http://localhost:3000/getBudgetImagesRights",
+    update_image_rights_local: "http://localhost:3000/updateImageRights",
+    delete_image_rights_local: "http://localhost:3000/deleteImageRights",
+    get_client_images_rights_local: "http://localhost:3000/getClientImagesRights",
+    get_invoice_images_rights_local: "http://localhost:3000/getInvoiceImagesRights",
+    get_all_images_rights_local: "http://localhost:3000/getAllImagesRights",
+    get_images_rights_by_status_local: "http://localhost:3000/getImagesRightsByStatus",
+    update_user_local: "http://localhost:3000/updateUser",
 }
 
 export default {

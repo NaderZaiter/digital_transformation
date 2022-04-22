@@ -58,9 +58,17 @@ const AddOrModifyImageRightsComponent = ({ navigation }) => {
     }
   };
 
+  const getImagesRightsStatus = () => {
+    let status = 'in progress';
+    if(new Date().valueOf() > campaignEndDate.valueOf()) {
+      status = 'expired'
+    }
+    return status;
+  }
+
   const updateImageRightsIntoDDBB = async() => {
     let result = false;
-    await fetch(petitions.update_image_rights, {
+    await fetch(petitions.update_image_rights_local, {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -72,6 +80,7 @@ const AddOrModifyImageRightsComponent = ({ navigation }) => {
           agencyName: agencyName.trim(),
           modelName: modelName.trim(),
           campaign: campaign.trim(),
+          status: getImagesRightsStatus(),
           rightsDuration: rightsDuration.trim(),
           campaignStartDate: formatDate(campaignStartDate),
           campaignEndDate: formatDate(campaignEndDate),

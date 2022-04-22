@@ -121,4 +121,36 @@ router.post('/login', checkAuthMiddleware.checkAuth, controller.login);
  *  summary: Gets invoice's images rights
  */
   router.post('/getInvoiceImagesRights', checkAuthMiddleware.checkAuth, controller.getInvoiceImagesRights);
+ /**
+ * @swagger
+ * /getAllImagesRights
+ *  get:
+ *  summary: Gets all images rights
+ */
+  router.get('/getAllImagesRights', checkAuthMiddleware.checkAuth, controller.getAllImagesRights);
+/**
+ * @swagger
+ * /getImagesRightsByStatus
+ *  post:
+ *  summary: Gets images rights by status
+ */
+  router.post('/getImagesRightsByStatus', checkAuthMiddleware.checkAuth, controller.getImagesRightsByStatus);
+  /**
+ * @swagger
+ * /updateUser
+ *  post:
+ *  summary: Updates user data
+ */
+   router.post('/updateUser', checkAuthMiddleware.checkAuth, controller.updateUser);
+
+  /** 
+ * @swagger 
+ * /api/v1/listallstaff/{email}:
+ *   get: 
+ *     description: Get all Employee by Email
+ *     responses:  
+ *       200: 
+ *         description: Success  
+ *   
+ */ 
 export default router;

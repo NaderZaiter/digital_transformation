@@ -68,8 +68,8 @@ const AddBudgetComponent = ({ navigation }) => {
         clientPostalCode: clientPostalCode.trim(),
         clientCity: clientCity.trim(),
         clientProvince: clientProvince.trim(),
-        tasks: setCorrectTasks(tasks),
-        imagesRights: setCorrectImagesRights(imagesRights),
+        tasks: await setCorrectTasks(tasks),
+        imagesRights: await setCorrectImagesRights(imagesRights),
         budgetTotalCosts: budgetTotalCosts.trim(),
         photographicProduction: photographicProduction.trim(),
         agencyFee: agencyFee.trim(),
@@ -111,8 +111,8 @@ const AddBudgetComponent = ({ navigation }) => {
         clientPostalCode: clientPostalCode.trim(),
         clientCity: clientCity.trim(),
         clientProvince: clientProvince.trim(),
-        tasks: setCorrectTasks(tasks),
-        imagesRights: setCorrectImagesRights(imagesRights),
+        tasks: await setCorrectTasks(tasks),
+        imagesRights: await setCorrectImagesRights(imagesRights),
         budgetTotalCosts: budgetTotalCosts.trim(),
         photographicProduction: photographicProduction.trim(),
         agencyFee: agencyFee.trim(),
@@ -134,20 +134,29 @@ const AddBudgetComponent = ({ navigation }) => {
     return result;
   }
 
-  const setCorrectTasks = (tasks) => {
-    tasks.forEach((task) => () => {
+  const setCorrectTasks = async (tasks) => {
+    for(let task of tasks){
       task.taskExpirationDate = formatDate(task.taskExpirationDate);
       task.taskPaymentDate = formatDate(task.taskPaymentDate);
-    })
+    }
     return tasks;
   }
 
-  const setCorrectImagesRights = (imagesRights) => {
-    imagesRights.forEach((imageRights) => () => {
+  const setCorrectImagesRights = async(imagesRights) => {
+    for(let imageRights of imagesRights){
+      imageRights.status = getImagesRightsStatus(imageRights.campaignEndDate)
       imageRights.campaignStartDate = formatDate(imageRights.campaignStartDate);
       imageRights.campaignEndDate = formatDate(imageRights.campaignEndDate);
-    })
+    }
     return imagesRights;
+  }
+
+  const getImagesRightsStatus = (campaignEndDate) => {
+    let status = 'in progress';
+    if(new Date().valueOf() > campaignEndDate.valueOf()) {
+      status = 'expired'
+    }
+    return status;
   }
 
   const addBudget = async() => {

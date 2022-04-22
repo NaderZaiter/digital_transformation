@@ -9,12 +9,14 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { store } from "../../../redux/store";
 import { updateUserProfile } from "../../../redux/slices/userSlice";
 import notification from "../../../helpers/toast";
+import { petitions } from "../../../constants/petitions";
 
 const EditProfileScreen = ({ navigation }) => {
   const user = useSelector((state) => state?.user);
   const [firstName, setFirstName] = useState(user.userProfile.firstName);
   const [lastName, setLastName] = useState(user.userProfile.lastName);
-  const [dateOfBirth, setDdateOfBirth] = useState(null);
+  const [password, setPassword] = useState(user.userProfile.password);
+  const [confirmPassword, setConfirmPassword] = useState(user.userProfile.password);
   const [image, setImage] = useState(user.userProfile.profile_picture_url);
 
   const pickImage = async () => {
@@ -30,34 +32,66 @@ const EditProfileScreen = ({ navigation }) => {
     }
   };
 
-  const Submit = () => {
+  const saveProfile = async() => {
     if (!firstName) {
       notification.danger({message: 'El nombre es obligatorio', useNativeToast: true, duration: 2000});
     } else if (!lastName) {
       notification.danger({message: 'Los apellidos son obligatorios', useNativeToast: true, duration: 2000});
-    }
-    else if (!dateOfBirth) {
-      notification.danger({message: 'La fecha de nacimiento es obligatoria', useNativeToast: true, duration: 2000});
-    } else {
-      store.dispatch(
-        updateUserProfile({
-          userProfile: {
-            firstName: firstName,
-            lastName: lastName,
-          },
-        })
-      );
+    }else if (!password) {
+      notification.danger({message: 'La contraseña es obligatoria', useNativeToast: true, duration: 2000});
+    }else if (password.indexOf(' ') != -1) {
+      notification.danger({message: 'La contraseña no puede tener espacios en blanco', useNativeToast: true, duration: 2000});
+    } else if (!confirmPassword) {
+      notification.danger({message: 'la confirmación de la contraseña es obligatoria', useNativeToast: true, duration: 2000});
+    } else if (confirmPassword.indexOf(' ') != -1) {
+      notification.danger({message: 'La confirmación de la contraseña no puede tener espacios en blanco', useNativeToast: true, duration: 2000});
+    } else if (password !== confirmPassword) {
+      notification.danger({message: 'Las contraseñas no coinciden', useNativeToast: true, duration: 2000});
+    } else if(await updateUserFromDDBB()){
+      notification.success({message: 'Perfil actualizado correctamente', useNativeToast: true, duration: 2000});
       navigation.goBack();
-      notification.success({message: 'Perfil editado correctamente', useNativeToast: true, duration: 2000});
+    }else{
+      notification.danger({message: 'No se ha podido actualizar el perfil', useNativeToast: true, duration: 2000});
+      navigation.goBack();
     }
   };
 
-  const pickerRef = useRef();
-  function open() {
-    pickerRef.current.focus();
-  }
-  function close() {
-    pickerRef.current.blur();
+  const updateUserFromDDBB = async() =>{
+    let result = false;
+    await fetch(petitions.update_user_local, {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }),
+      body: JSON.stringify({
+        firstName: firstName,
+        lastName: lastName,
+        password: password,
+        profilePictureURL: image,
+        user: user.userProfile.user
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if(responseJson.code === 200) {
+          store.dispatch(
+            updateUserProfile({
+              userProfile: {
+                firstName: firstName,
+                lastName: lastName,
+                password: password,
+                profile_picture_url: image
+              },
+            })
+          );
+          result = true;
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    return result;
   }
 
   return (
@@ -77,54 +111,54 @@ const EditProfileScreen = ({ navigation }) => {
               placeholderStyle={{}}
               rounded
               size="large"
-              source={{ uri: image }}
+              source={image ? { uri: image } : require('./../../../../assets/default_photo.jpg')}
               titleStyle={{}}
             />
           </View>
           <View style={styles.nameContainer}>
             <Text style={styles.name}>Foto de perfil</Text>
-            <Text style={styles.status}>Pincha para editar</Text>
+            <Text style={styles.status}>Pincha sobre la imágen para editar</Text>
           </View>
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.text}>Nombre</Text>
           <TextInput
+            value={firstName}
             style={styles.input}
             onChangeText={setFirstName}
-            placeholder={user.userProfile.firstName}
+            placeholder={"Nombre"}
           />
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.text}>Apellidos</Text>
           <TextInput
+            value={lastName}
             style={styles.input}
             onChangeText={setLastName}
-            placeholder={user.userProfile.lastName}
+            placeholder={"Apellidos"}
           />
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.text}>Fecha de nacimiento</Text>
-          <DatePicker
-            showIcon={false}
-            androidMode="spinner"
-            style={{
-              width: "100%",
-            }}
-            date={dateOfBirth}
-            mode="date"
-            placeholder="Select date"
-            format="YYYY-MM-DD"
-            confirmBtnText="Chọn"
-            cancelBtnText="Hủy"
-          
-            onDateChange={(dateOfBirth) => {
-              setDdateOfBirth(dateOfBirth);
-            }}
+          <Text style={styles.text}>Contraseña</Text>
+          <TextInput
+            value={password}
+            style={styles.input}
+            onChangeText={setPassword}
+            placeholder={"Contraseña"}
           />
         </View>
-        <TouchableOpacity onPress={Submit}>
-          <View style={styles.logoutContainer}>
-            <Text style={styles.logout}>Save</Text>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Confirmación de contraseña</Text>
+          <TextInput
+            value={confirmPassword}
+            style={styles.input}
+            onChangeText={setConfirmPassword}
+            placeholder={"Confirmación de contraseña"}
+          />
+        </View>
+        <TouchableOpacity onPress={saveProfile}>
+          <View style={styles.saveProfileContainer}>
+            <Text style={styles.saveProfile}>Actualizar perfil</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -134,7 +168,7 @@ const EditProfileScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   avatar: {
-    marginLeft: "10%",
+    marginLeft: "2%",
     marginTop: "15%",
   },
   headContainer: {
@@ -180,13 +214,13 @@ const styles = StyleSheet.create({
     margin: "2%",
     borderColor: colors.black,
   },
-  logoutContainer: {
+  saveProfileContainer: {
     backgroundColor: colors.green,
     marginTop: "20%",
     padding: 20,
     alignItems: "center",
   },
-  logout: {
+  saveProfile: {
     fontSize: 24,
     color: colors.white,
   },

@@ -26,13 +26,13 @@ const ImagesRightsScreen = ({navigation}) => {
 
     }else if(!await searchBudgetimagesRights()){
       setImagesRights([]);
-      notification.danger({message: 'No se ha encontrado ningún presupuesto', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'No se ha encontrado ningún derecho', useNativeToast: true, duration: 2000});
     }
   };
 
   const searchBudgetimagesRights = async() => {
     let result = false;
-    await fetch(petitions.get_budget_images_rights, {
+    await fetch(petitions.get_budget_images_rights_local, {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -75,7 +75,7 @@ const ImagesRightsScreen = ({navigation}) => {
 
   const deleteImageRightsFromDDBB = async(id) => {
     let result = false;
-    await fetch(petitions.delete_image_rights, {
+    await fetch(petitions.delete_image_rights_local, {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -106,13 +106,13 @@ const ImagesRightsScreen = ({navigation}) => {
       notification.danger({message: 'El CIF del cliente es obligatorio', useNativeToast: true, duration: 2000});
     }else if(!await searchClientImagesRights()){
       setImagesRights([]);
-      notification.danger({message: 'No se ha encontrado ningún presupuesto', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'No se ha encontrado ningún derecho', useNativeToast: true, duration: 2000});
     }
   }
 
   const searchClientImagesRights = async() => {
     let result = false;
-    await fetch(petitions.get_client_images_rights, {
+    await fetch(petitions.get_client_images_rights_local, {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -144,13 +144,13 @@ const ImagesRightsScreen = ({navigation}) => {
       notification.danger({message: 'El número de factura es obligatorio', useNativeToast: true, duration: 2000});
     }else if(!await searchInvoiceImagesRights()){
       setImagesRights([]);
-      notification.danger({message: 'No se ha encontrado ningún presupuesto', useNativeToast: true, duration: 2000});
+      notification.danger({message: 'No se ha encontrado ningún derecho', useNativeToast: true, duration: 2000});
     }
   }
 
   const searchInvoiceImagesRights = async() => {
     let result = false;
-    await fetch(petitions.get_invoice_images_rights, {
+    await fetch(petitions.get_invoice_images_rights_local, {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -173,12 +173,81 @@ const ImagesRightsScreen = ({navigation}) => {
       return result;
   }
 
+  const getAllImagesRights = async() => {
+    setBudgetReference("");
+    setBudgetNumber("");
+    setClientCIF("");
+    setInvoiceNumber("");
+    if(!await getAllImagesRightsFromDDBB()){
+      setImagesRights([]);
+      notification.danger({message: 'No se ha encontrado ningún derecho', useNativeToast: true, duration: 2000});
+    }
+  }
+
+  const getAllImagesRightsFromDDBB = async() => {
+    let result = false;
+    await fetch(petitions.get_all_images_rights_local, {
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if(responseJson.code === 200) {
+          setImagesRights(responseJson.imagesRights);
+          result = true;
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+      return result;
+  }
+
+  const getImagesRightsByStatus = async(status) => {
+    setBudgetReference("");
+    setBudgetNumber("");
+    setClientCIF("");
+    setInvoiceNumber("");
+    if(!await searchImagesRightsbyStatus(status)){
+      setImagesRights([]);
+      notification.danger({message: 'No se ha encontrado ningún derecho', useNativeToast: true, duration: 2000});
+    }
+  }
+  
+  const searchImagesRightsbyStatus = async(status) => {
+    let result = false;
+    await fetch(petitions.get_images_rights_by_status_local, {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }),
+      body: JSON.stringify({
+        status: status
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if(responseJson.code === 200) {
+          setImagesRights(responseJson.imagesRights);
+          result = true;
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+      return result;
+  }
+
   useEffect(() => {
     if(imagesRights[0]){
       if(imagesRights.length === 1){
-        notification.success({message: `Se ha encontrado ${imagesRights.length} imágen`, useNativeToast: true, duration: 2000});
+        notification.success({message: `Se ha encontrado ${imagesRights.length} derecho`, useNativeToast: true, duration: 2000});
       }else{
-        notification.success({message: `Se han encontrado ${imagesRights.length} imágenes`, useNativeToast: true, duration: 2000});
+        notification.success({message: `Se han encontrado ${imagesRights.length} derechos`, useNativeToast: true, duration: 2000});
       }
     }
   }, [imagesRights]);
@@ -210,9 +279,9 @@ const ImagesRightsScreen = ({navigation}) => {
       <View>
         <Text>Consultar los derechos imagen por categoría:</Text>
         <View style={styles.buttonRowView}>
-          <Button title="Todos" color={colors.primary} onPress={()=>{}} />
-          <Button title="En curso" color={colors.primary} onPress={()=>{}} />
-          <Button title="Caducados" color={colors.primary} onPress={()=>{}} />
+          <Button title="Todos" color={colors.primary} onPress={()=>{getAllImagesRights()}} />
+          <Button title="En curso" color={colors.primary} onPress={()=>{getImagesRightsByStatus("in progress")}} />
+          <Button title="Caducados" color={colors.primary} onPress={()=>{getImagesRightsByStatus("expired")}} />
         </View>
       </View>
       <View>

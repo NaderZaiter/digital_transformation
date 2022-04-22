@@ -7,6 +7,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import ProfileButtonComponent from "../../../components/ProfileButtonComponent";
 import { store } from "../../../redux/store";
 import { deleteUser } from "../../../redux/slices/userSlice";
+import _ from "lodash";
 
 const ProfileScreen = ({ navigation }) => {
   const user = useSelector((state) => state?.user);
@@ -23,29 +24,17 @@ const ProfileScreen = ({ navigation }) => {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    if (user.userProfile.id) {
-      setId(user.userProfile.id);
-    } else {
-      setId(0)
-    }
-    if (user.userProfile.firstName) {
-      setFirstName(user.userProfile.firstName);
-    } else {
-      setFirstName('Nader Mohammad');
-    }
-    if (user.userProfile.lastName) {
-      setLastName(user.userProfile.lastName);
-    } else {
-      setLastName('Zaiter');
-    }
-    if (user.userProfile.profile_picture_url.length > 0) {
-      setImage(user.userProfile.profile_picture_url);
-    } else {
-      setImage('../../../assets/default_photo.jpg')
-    }
-    setValue(true);
-    setStatus("Avaliable")
-  }, [user.userProfile.firstName]);
+    setProfileValues(user.userProfile.is_available)
+  }, [user.userProfile]);
+
+  const setProfileValues = (value) => {
+    setId(user.userProfile.id);
+    setFirstName(_.capitalize(user.userProfile.firstName));
+    setLastName(_.capitalize(user.userProfile.lastName));
+    setImage(user.userProfile.profile_picture_url);
+    setValue(value);
+    setStatus(value? "Available": "Unavailable");
+  }
 
   const changeStatus = () => {
     setValue(!value);
@@ -71,7 +60,7 @@ const ProfileScreen = ({ navigation }) => {
               rounded
               size="large"
               source={
-                { uri: image }
+                image ? { uri: image } : require('./../../../../assets/default_photo.jpg')
               }
             />
           </View>
